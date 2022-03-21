@@ -75,6 +75,7 @@ public class SpoonacularApiClient implements ExternalApiClient {
         if(LIMIT_LICENSE) sb.append("&limitLicense=true");
         if(SORT_RANDOM) sb.append("&sort=random");
         if(IGNORE_PANTRY) sb.append("&ignorePantry=true");
+<<<<<<< HEAD
         if(FILL_INGREDIENTS) sb.append("&fillIngredients=true");
         return sb.toString();
     }
@@ -86,6 +87,16 @@ public class SpoonacularApiClient implements ExternalApiClient {
         list.forEach(str -> sb.append(str).append(","));
         int lastCharIndex = sb.length() - 1;
         if(sb.charAt(lastCharIndex) == ',') sb.deleteCharAt(lastCharIndex);
+=======
+        return sb.toString();
+    }
+    private String buildQuery(List<String> include, List<String> exclude) {
+        return "&include=" + createQuery(include) + "&exclude=" + createQuery(exclude);
+    }
+    private String createQuery(List<String> include) {
+        StringBuilder sb = new StringBuilder();
+        include.forEach(str -> sb.append(str).append("%2C%20"));
+>>>>>>> 55aefde3b2b015dd3d464518d1a9ec12a40816fc
         return sb.toString();
     }
 }
