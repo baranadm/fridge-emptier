@@ -1,22 +1,20 @@
 package pl.baranowski.dev.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.baranowski.dev.deserializer.RecipesCardDeserializer;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonDeserialize(using = RecipesCardDeserializer.class)
 public class RecipeCard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
     private long originId;
     private String title;
     private String imageURL;
-    private String ingredientsToBuy;
+    private List<Ingredient> ingredientsToBuy;
 }

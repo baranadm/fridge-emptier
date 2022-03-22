@@ -5,11 +5,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import pl.baranowski.dev.exception.ExternalApiException;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class SpoonacularApiClient implements ExternalApiClient {
     private final Logger LOGGER = LoggerFactory.getLogger(SpoonacularApiClient.class);
     private final static String API_HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
@@ -17,7 +19,7 @@ public class SpoonacularApiClient implements ExternalApiClient {
     private final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/";
     private final static String ENDPOINT_SEARCH_URL = "recipes/complexSearch?";
     private final static boolean INSTRUCTIONS_REQUIRED = true;
-    private final static boolean LIMIT_LICENSE = true;
+    private final static boolean LIMIT_LICENSE = false;
     private final static boolean SORT_RANDOM = true;
     private final static boolean IGNORE_PANTRY = true;
     private final static boolean FILL_INGREDIENTS = true;

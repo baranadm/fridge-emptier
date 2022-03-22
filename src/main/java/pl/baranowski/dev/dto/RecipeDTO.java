@@ -1,21 +1,20 @@
-package pl.baranowski.dev.model;
+package pl.baranowski.dev.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.baranowski.dev.deserializer.RecipeDeserializer;
+import pl.baranowski.dev.model.Ingredient;
+import pl.baranowski.dev.model.Step;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Recipe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+@JsonDeserialize(using = RecipeDeserializer.class)
+public class RecipeDTO {
     private Long originId;
     private String originURL;
     private String imageURL;
