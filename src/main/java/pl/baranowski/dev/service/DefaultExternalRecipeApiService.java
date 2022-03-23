@@ -14,12 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class DefaultExternalApiRecipeService implements RecipeService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExternalApiRecipeService.class);
+public class DefaultExternalRecipeApiService implements RecipeService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExternalRecipeApiService.class);
     private final ExternalApiClient spoonacularApiClient;
     private final ObjectMapper objectMapper;
 
-    public DefaultExternalApiRecipeService(ExternalApiClient spoonacularApiClient,
+    public DefaultExternalRecipeApiService(ExternalApiClient spoonacularApiClient,
                                            ObjectMapper objectMapper) {
         this.spoonacularApiClient = spoonacularApiClient;
         this.objectMapper = objectMapper;

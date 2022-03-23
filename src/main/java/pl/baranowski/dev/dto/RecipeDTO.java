@@ -18,6 +18,6 @@ public class RecipeDTO {
     private String imageURL;
     private String title;
     private String summary;
-    private List<IngredientDTO> ingredientDTOS;
-    private List<StepDTO> instructions;
+    private List<IngredientDTO> ingredients;
+    private List<StepDTO> steps;
 }

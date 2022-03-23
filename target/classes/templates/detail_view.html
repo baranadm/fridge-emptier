@@ -1,5 +1,6 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -8,18 +9,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
-    <title>Unknown App</title>
+    <title th:text="|Fridge emptier: ${recipe.title}|"></title>
 </head>
 
 <body>
     <div class="container">
         <div class="row gy-2 py-3 center">
-            <!-- title -->
-            <h1>Farfalle With Broccoli, Carrots and Tomatoes</h1>
+            <h1 th:text="${recipe.title}"></h1>
             <hr>
             <div class="recipe-header center">
-                <!-- Recipe image -->
-                <img class="recipe-image" src="https://spoonacular.com/recipeImages/642582-556x370.jpg">
+                <img class="recipe-image" th:src="@{${recipe.imageURL}}"/>
             </div>
             <hr>
             <div class="button-footer d-flex justify-content-evenly">
@@ -33,8 +32,12 @@
                     <button type="button" class="btn btn-success">Save to bookmarks</button>
                 </div>
             </div>
-            <div class="text-block">
-                <hr>
+            <hr>
+            <h5>Origin URL:
+                <a th:href="@{${recipe.originURL}}" th:text="@{${recipe.originURL}}"></a>
+            </h5>
+            <div class="text-block" th:utext="${recipe.summary}">
+
                 Farfalle With Broccoli, Carrots and Tomatoes requires about <b>about 45 minutes</b> from start to
                 finish. This recipe serves 8. For <b>96 cents per serving</b>, this recipe <b>covers 15%</b> of your
                 daily requirements of vitamins and minerals. One portion of this dish contains around <b>13g of
@@ -52,105 +55,15 @@
             </div>
             <div class="text-block">
                 <hr>
-                <!-- extendedIngredients[] -->
                 <h3>Ingredients:</h3>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">1 pound farfalle pasta</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">2 tablespoons peanut oil</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">3 carrots</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">2 inches large broccoli heads (that's what she said)</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">1 container grape tomatoes</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">1 cup + of Parmigiano-Reggiano, grated</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">3 garlic cloves, minced</div>
-                <!-- extendedIngredients[].original -->
-                <div class="ingredientDTO">2 bunches of scallions</div>
+                <div class="ingredientDTO" th:each="ingredient: ${recipe.ingredients}"><span th:text="|${ingredient.amount} ${ingredient.unit} ${ingredient.name}|"></span></div>
             </div>
             <div class="instructions-block">
                 <hr>
                 <h3>Instructions</h3>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">1</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Bring a large pot of water to boil</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">2</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Cook pasta about one or two minutes less than recommended on package directions.</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">3</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Clean and slice the carrots into thin rounds</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">4</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Cut the broccoli into small florets</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">5</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Roughly dice the stalks</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">6</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Thinly slice the green onions</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">7</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Heat the peanut oil in a skillet over medium-high heat</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">8</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Add minced garlic and saute for about 30 seconds</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">9</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Add broccoli and carrots, and cook 3-5 minutes until the vegetables are softened but are still crisp</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">10</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Add the scallions and cook for another 30 seconds</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">11</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Season well with salt and remove from heat.</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">12</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Mix the vegetables and the pasta, let cool T</span>
-                </div>
-                <div class="recipe-step">
-                    <!-- analyzedInstructions[].steps[].number -->
-                    <span class="recipe-step-number">13</span>
-                    <!-- analyzedInstructions[].steps[].step -->
-                    <span class="recipe-step-text">Then add tomatoes and cheese (note: if cooking ahead of time, wait to add the tomatoes and cheese until about an hour before serving).</span>
+                <div class="recipe-step" th:each="step: ${recipe.steps}">
+                    <span class="recipe-step-number" th:text="${step.number}"></span>
+                    <span class="recipe-step-text" th:text="${step.description}"></span>
                 </div>
             </div>
         </div>

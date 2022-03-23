@@ -25,8 +25,8 @@ class RecipeDTODeserializerTest {
         assertEquals(
                 "This recipe serves 6 and costs 76 cents per serving. One serving contains <b>109 calories</b>, <b>2g of protein</b>, and <b>6g of fat</b>. 19 people have tried and liked this recipe. A mixture of almond milk, avocado, honey, and a handful of other ingredients are all it takes to make this recipe so yummy. It can be enjoyed any time, but it is especially good for <b>Halloween</b>. It is a good option if you're following a <b>gluten free and dairy free</b> diet. From preparation to the plate, this recipe takes around <b>3 hours</b>. All things considered, we decided this recipe <b>deserves a spoonacular score of 86%</b>. This score is amazing. Try <a href=\"https://spoonacular.com/recipes/cold-brew-coffee-latte-ice-pops-912354\">Cold Brew Coffee Latte Ice Pops</a>, <a href=\"https://spoonacular.com/recipes/monster-pops-266266\">Monster Pops</a>, and <a href=\"https://spoonacular.com/recipes/monster-cookie-pops-177420\">Monster Cookie Pops</a> for similar recipes.",
                 recipeDTO.getSummary());
-        assertEquals(6, recipeDTO.getIngredientDTOS().size());
-        assertEquals(3, recipeDTO.getInstructions().size());
+        assertEquals(6, recipeDTO.getIngredients().size());
+        assertEquals(3, recipeDTO.getSteps().size());
     }
 
 }

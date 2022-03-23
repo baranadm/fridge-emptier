@@ -18,12 +18,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {SpoonacularApiClient.class, DefaultExternalApiRecipeService.class, ObjectMapper.class})
-class DefaultExternalApiRecipeServiceTest {
+@SpringBootTest(classes = {SpoonacularApiClient.class, DefaultExternalRecipeApiService.class, ObjectMapper.class})
+class DefaultExternalRecipeApiServiceTest {
     @MockBean
     ExternalApiClient spoonacularApiClient;
     @Autowired
-    DefaultExternalApiRecipeService underTest;
+    DefaultExternalRecipeApiService underTest;
     @Autowired
     ObjectMapper objectMapper;
 
