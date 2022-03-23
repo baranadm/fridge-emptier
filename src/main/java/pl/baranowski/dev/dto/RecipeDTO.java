@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.baranowski.dev.deserializer.RecipeDeserializer;
-import pl.baranowski.dev.model.Step;
+import pl.baranowski.dev.model.StepDTO;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public class RecipeDTO {
     private String title;
     private String summary;
     private List<IngredientDTO> ingredientDTOS;
-    private List<Step> instructions;
+    private List<StepDTO> instructions;
 }

@@ -4,17 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.baranowski.dev.deserializer.StepDeserializer;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import pl.baranowski.dev.deserializer.StepDTODeserializer;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonDeserialize(using = StepDeserializer.class)
-public class Step {
+@JsonDeserialize(using = StepDTODeserializer.class)
+public class StepDTO {
     private int number;
     private String description;
 }

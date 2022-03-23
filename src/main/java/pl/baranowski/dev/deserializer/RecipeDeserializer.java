@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.model.Step;
+import pl.baranowski.dev.model.StepDTO;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,10 +45,10 @@ public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
         List<IngredientDTO> ingredientDTOS = getIngredients(node.get("extendedIngredients"));
         LOGGER.debug("Parsed ingredients={}", ingredientDTOS);
 
-        List<Step> steps = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
-        LOGGER.debug("Parsed steps={}", steps);
+        List<StepDTO> stepDTOS = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
+        LOGGER.debug("Parsed steps={}", stepDTOS);
 
-        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredientDTOS, steps);
+        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredientDTOS, stepDTOS);
         LOGGER.debug("Returning result: {}", result);
         return result;
     }
@@ -66,14 +66,14 @@ public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
         return result;
     }
 
-    private List<Step> getSteps(JsonNode stepsNode) throws JsonProcessingException {
+    private List<StepDTO> getSteps(JsonNode stepsNode) throws JsonProcessingException {
         LOGGER.debug("getSteps(JsonNode={})", stepsNode);
 
         String stepsJsonArray = stepsNode.toString();
         LOGGER.debug("stepsArray: {}", stepsJsonArray);
 
-        ObjectMapper mapper = createMapper(Step.class, new StepDeserializer());
-        List<Step> result = Arrays.asList(mapper.readValue(stepsJsonArray, Step[].class));
+        ObjectMapper mapper = createMapper(StepDTO.class, new StepDTODeserializer());
+        List<StepDTO> result = Arrays.asList(mapper.readValue(stepsJsonArray, StepDTO[].class));
 
         LOGGER.debug("Returning result: {}", result);
         return result;

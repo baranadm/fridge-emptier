@@ -24,5 +24,5 @@ public class Recipe {
     @CollectionTable
     private List<IngredientDTO> ingredientDTOS;
     @CollectionTable
-    private List<Step> instructions;
+    private List<StepDTO> instructions;
 }
