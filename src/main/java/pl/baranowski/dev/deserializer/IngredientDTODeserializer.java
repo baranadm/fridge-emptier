@@ -12,8 +12,8 @@ import pl.baranowski.dev.dto.IngredientDTO;
 
 import java.io.IOException;
 
-public class IngredientDeserializer extends JsonDeserializer<IngredientDTO> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(IngredientDeserializer.class);
+public class IngredientDTODeserializer extends JsonDeserializer<IngredientDTO> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IngredientDTODeserializer.class);
 
     @Override
     public IngredientDTO deserialize(JsonParser p,

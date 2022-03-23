@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.baranowski.dev.dto.IngredientDTO;
+import pl.baranowski.dev.dto.StepDTO;
 
 import javax.persistence.*;
 import java.util.List;

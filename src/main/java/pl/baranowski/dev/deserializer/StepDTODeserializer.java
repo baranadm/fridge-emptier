@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import pl.baranowski.dev.model.StepDTO;
+import pl.baranowski.dev.dto.StepDTO;
 
 import java.io.IOException;
 

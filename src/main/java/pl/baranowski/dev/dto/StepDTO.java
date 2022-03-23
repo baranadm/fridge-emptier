@@ -1,4 +1,4 @@
-package pl.baranowski.dev.model;
+package pl.baranowski.dev.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;

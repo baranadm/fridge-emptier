@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.model.StepDTO;
+import pl.baranowski.dev.dto.StepDTO;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecipeDeserializer.class);
+public class RecipeDTODeserializer extends JsonDeserializer<RecipeDTO> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecipeDTODeserializer.class);
 
     @Override
     public RecipeDTO deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
@@ -59,7 +59,7 @@ public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
         String ingredientsJsonArray = ingredientsNode.toString();
         LOGGER.debug("ingredientsArray: {}", ingredientsJsonArray);
 
-        ObjectMapper mapper = createMapper(IngredientDTO.class, new IngredientDeserializer());
+        ObjectMapper mapper = createMapper(IngredientDTO.class, new IngredientDTODeserializer());
         List<IngredientDTO> result = Arrays.asList(mapper.readValue(ingredientsJsonArray, IngredientDTO[].class));
 
         LOGGER.debug("Returning result: {}", result);

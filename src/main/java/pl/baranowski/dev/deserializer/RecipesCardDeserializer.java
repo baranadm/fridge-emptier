@@ -40,7 +40,7 @@ public class RecipesCardDeserializer extends JsonDeserializer<RecipeCard> {
         //TODO pytanie: czy mogę to zrobić przez DI?
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(IngredientDTO.class, new IngredientDeserializer());
+        module.addDeserializer(IngredientDTO.class, new IngredientDTODeserializer());
         mapper.registerModule(module);
 
         List<IngredientDTO> ingredientDTOS = Arrays.asList(mapper.readValue(ingredientsJson, IngredientDTO[].class));

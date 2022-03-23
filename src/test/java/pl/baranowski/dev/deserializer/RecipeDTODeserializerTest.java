@@ -10,7 +10,7 @@ import pl.baranowski.dev.dto.RecipeDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = ObjectMapper.class)
-class RecipeDeserializerTest {
+class RecipeDTODeserializerTest {
     @Autowired
     ObjectMapper objectMapper;
 
