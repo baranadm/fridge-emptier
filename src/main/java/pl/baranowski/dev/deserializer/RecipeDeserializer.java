@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baranowski.dev.dto.RecipeDTO;
-import pl.baranowski.dev.model.Ingredient;
+import pl.baranowski.dev.dto.IngredientDTO;
 import pl.baranowski.dev.model.Step;
 
 import java.io.IOException;
@@ -42,25 +42,25 @@ public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
         String summary = node.get("summary").asText();
         LOGGER.debug("Parsed summary={}", summary);
 
-        List<Ingredient> ingredients = getIngredients(node.get("extendedIngredients"));
-        LOGGER.debug("Parsed ingredients={}", ingredients);
+        List<IngredientDTO> ingredientDTOS = getIngredients(node.get("extendedIngredients"));
+        LOGGER.debug("Parsed ingredients={}", ingredientDTOS);
 
         List<Step> steps = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
         LOGGER.debug("Parsed steps={}", steps);
 
-        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredients, steps);
+        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredientDTOS, steps);
         LOGGER.debug("Returning result: {}", result);
         return result;
     }
 
-    private List<Ingredient> getIngredients(JsonNode ingredientsNode) throws JsonProcessingException {
+    private List<IngredientDTO> getIngredients(JsonNode ingredientsNode) throws JsonProcessingException {
         LOGGER.debug("getIngredients(JsonNode={})", ingredientsNode);
 
         String ingredientsJsonArray = ingredientsNode.toString();
         LOGGER.debug("ingredientsArray: {}", ingredientsJsonArray);
 
-        ObjectMapper mapper = createMapper(Ingredient.class, new IngredientDeserializer());
-        List<Ingredient> result = Arrays.asList(mapper.readValue(ingredientsJsonArray, Ingredient[].class));
+        ObjectMapper mapper = createMapper(IngredientDTO.class, new IngredientDeserializer());
+        List<IngredientDTO> result = Arrays.asList(mapper.readValue(ingredientsJsonArray, IngredientDTO[].class));
 
         LOGGER.debug("Returning result: {}", result);
         return result;

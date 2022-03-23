@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.baranowski.dev.deserializer.RecipesCardDeserializer;
+import pl.baranowski.dev.dto.IngredientDTO;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public class RecipeCard {
     private long originId;
     private String title;
     private String imageURL;
-    private List<Ingredient> ingredientsToBuy;
+    private List<IngredientDTO> ingredientsToBuy;
 }

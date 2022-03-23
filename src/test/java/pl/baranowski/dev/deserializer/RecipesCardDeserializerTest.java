@@ -1,18 +1,15 @@
 package pl.baranowski.dev.deserializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.baranowski.dev.model.Ingredient;
+import pl.baranowski.dev.dto.IngredientDTO;
 import pl.baranowski.dev.model.RecipeCard;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = ObjectMapper.class)
 class RecipesCardDeserializerTest {
@@ -26,10 +23,11 @@ class RecipesCardDeserializerTest {
         //when
         RecipeCard result = underTest.readValue(json, RecipeCard.class);
         //then
-        List<Ingredient> expectedUnusedIngredients = Arrays.asList(new Ingredient("almond milk", 1.5D, "cup"),
-                                                             new Ingredient("baby spinach", 2.0D, "cups"),
-                                                             new Ingredient("honey", 1.5D, "tablespoon"),
-                                                             new Ingredient("mango", 1.0, "cup"));
-        RecipeCard expected = new RecipeCard(645479L, "Green Monster Ice Pops", "https://spoonacular.com/recipeImages/645479-312x231.jpg", expectedUnusedIngredients);
+        List<IngredientDTO> expectedUnusedIngredientDTOS = Arrays.asList(new IngredientDTO("almond milk", 1.5D, "cup"),
+                                                                         new IngredientDTO("baby spinach", 2.0D, "cups"),
+                                                                         new IngredientDTO("honey", 1.5D, "tablespoon"),
+                                                                         new IngredientDTO("mango", 1.0, "cup"));
+        RecipeCard expected = new RecipeCard(645479L, "Green Monster Ice Pops", "https://spoonacular.com/recipeImages/645479-312x231.jpg",
+                                             expectedUnusedIngredientDTOS);
     }
 }

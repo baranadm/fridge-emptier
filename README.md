@@ -1,6 +1,6 @@
 # fridge-emptier
 
-Service lets user write down ingredients from it's fridge, and ingredients that user does not like. The service then searches for recipies that contains every ingredient from user's fridge, and does not contain unliked ingredients. User can view ingredients, summary and instructions of recipe. Recipe has origin URL, image URL, summary, ingredients, instructions. User can save recipies to favourites, delete and list-view them.
+Service lets user write down ingredientDTOS from it's fridge, and ingredientDTOS that user does not like. The service then searches for recipies that contains every ingredientDTO from user's fridge, and does not contain unliked ingredientDTOS. User can view ingredientDTOS, summary and instructions of recipe. Recipe has origin URL, image URL, summary, ingredientDTOS, instructions. User can save recipies to favourites, delete and list-view them.
 
 When user adds a recipe to favourites, it then is saved to database as an entity.
 

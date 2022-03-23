@@ -1,4 +1,4 @@
-package pl.baranowski.dev.model;
+package pl.baranowski.dev.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import pl.baranowski.dev.deserializer.IngredientDeserializer;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonDeserialize(using = IngredientDeserializer.class)
-public class Ingredient {
+public class IngredientDTO {
     private String name;
     private Double amount;
     private String unit;

@@ -8,16 +8,16 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.baranowski.dev.model.Ingredient;
+import pl.baranowski.dev.dto.IngredientDTO;
 
 import java.io.IOException;
 
-public class IngredientDeserializer extends JsonDeserializer<Ingredient> {
+public class IngredientDeserializer extends JsonDeserializer<IngredientDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IngredientDeserializer.class);
 
     @Override
-    public Ingredient deserialize(JsonParser p,
-                                  DeserializationContext ctxt) throws IOException, JacksonException {
+    public IngredientDTO deserialize(JsonParser p,
+                                     DeserializationContext ctxt) throws IOException, JacksonException {
         LOGGER.debug("Starting deserializer");
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
@@ -28,9 +28,9 @@ public class IngredientDeserializer extends JsonDeserializer<Ingredient> {
         LOGGER.debug("Parsed amount={}", amount);
         String unit = node.get("unit").asText();
         LOGGER.debug("Parsed unit={}", unit);
-        Ingredient ingredient = new Ingredient(name, amount, unit);
+        IngredientDTO ingredientDTO = new IngredientDTO(name, amount, unit);
 
-        LOGGER.debug("Returning result: {}", ingredient);
-        return ingredient;
+        LOGGER.debug("Returning result: {}", ingredientDTO);
+        return ingredientDTO;
     }
 }

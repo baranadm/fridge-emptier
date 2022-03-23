@@ -3,15 +3,15 @@ package pl.baranowski.dev.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.baranowski.dev.dto.IngredientDTO;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -21,6 +21,8 @@ public class Recipe {
     private String imageURL;
     private String title;
     private String summary;
-    private List<Ingredient> ingredients;
+    @CollectionTable
+    private List<IngredientDTO> ingredientDTOS;
+    @CollectionTable
     private List<Step> instructions;
 }
