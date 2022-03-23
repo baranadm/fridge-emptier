@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class StepDeserializer extends JsonDeserializer<Step> {
     @Override
-    public Step deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JacksonException {
+    public Step deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
 

@@ -26,36 +26,57 @@ public class DefaultExternalApiRecipeService implements RecipeService {
     @Override
     public RecipeDTO get(long id) throws ApiException {
         LOGGER.debug("get(id='{}')", id);
+
         String jsonRecipe = spoonacularApiClient.get(id);
         LOGGER.debug("Received json: {}", jsonRecipe);
-        try {
-            RecipeDTO result = objectMapper.readValue(jsonRecipe, RecipeDTO.class);
-            LOGGER.debug("Returning: {}", result);
-            return result;
-        } catch (JsonProcessingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new ApiException(e.getMessage());
-        }
+
+        RecipeDTO result;
+        result = parse(jsonRecipe, RecipeDTO.class);
+
+        LOGGER.debug("Returning result: {}", result);
+        return result;
     }
 
     @Override
     public List<RecipeCard> find(List<String> include, List<String> exclude) throws ApiException {
         LOGGER.debug("find(include='{}', exclude='{}')", include, exclude);
+
         String jsonList = spoonacularApiClient.find(include, exclude);
         LOGGER.debug("Received json: {}", jsonList);
+
+        String results = getResults(jsonList);
+
+        //TODO pytanie: czy jest to eleganckie rozwiązanie? -> get().toString() , a później readValue z tego
+        RecipeCard[] cards = parse(results, RecipeCard[].class);
+
+        List<RecipeCard> result = Arrays.asList(cards);
+        LOGGER.debug("Returning: {}", result);
+        return result;
+    }
+
+    private <T> T parse(String json, Class<T> clazz) throws ApiException {
+        LOGGER.debug("Trying to extract {} from: {}", clazz, json);
+        T result;
         try {
-            //TODO pytanie: czy jest to eleganckie rozwiązanie? -> get().toString() , a później readValue z tego
-            String results = objectMapper.readTree(jsonList).get("results").toString();
-
-            LOGGER.debug("Starting to read array from string: {}", results);
-            RecipeCard[] cards = objectMapper.readValue(results, RecipeCard[].class);
-
-            List<RecipeCard> result = Arrays.asList(cards);
-            LOGGER.debug("Returning: {}", result);
-            return result;
+            result = objectMapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
             LOGGER.error(e.getMessage(), e);
             throw new ApiException(e.getMessage());
+        }
+        LOGGER.debug("Returning: {}", result);
+        return result;
+    }
+
+    //TODO pytanie: czy nie lepiej zwracać pustą listę? i załatwić to Optionalem?
+    private String getResults(String jsonList) throws ApiException {
+        LOGGER.debug("Trying to find results in {}", jsonList);
+        try {
+            String results = objectMapper.readTree(jsonList).get("results").toString();
+            LOGGER.debug("Returning: {}", results);
+            return results;
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new ApiException("No results.");
         }
     }
 }

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class SpoonacularApiClientTest {
 
+    //TODO napisać testy
     SpoonacularApiClient underTest = new SpoonacularApiClient();
     @Test
     void get() throws ExternalApiException {
