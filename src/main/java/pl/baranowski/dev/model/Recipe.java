@@ -3,8 +3,8 @@ package pl.baranowski.dev.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.dto.StepDTO;
+import pl.baranowski.dev.entity.Ingredient;
+import pl.baranowski.dev.entity.Step;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,8 +22,8 @@ public class Recipe {
     private String imageURL;
     private String title;
     private String summary;
-    @CollectionTable
-    private List<IngredientDTO> ingredientDTOS;
-    @CollectionTable
-    private List<StepDTO> instructions;
+    @OneToMany(mappedBy = "recipe")
+    private List<Ingredient> ingredient;
+    @OneToMany(mappedBy = "recipe")
+    private List<Step> steps;
 }
