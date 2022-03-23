@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import pl.baranowski.dev.client.ExternalApiClient;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.exception.ApiException;
@@ -12,6 +13,7 @@ import pl.baranowski.dev.model.RecipeCard;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class DefaultExternalApiRecipeService implements RecipeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExternalApiRecipeService.class);
     private final ExternalApiClient spoonacularApiClient;
