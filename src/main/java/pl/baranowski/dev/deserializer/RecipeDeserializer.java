@@ -15,9 +15,7 @@ import pl.baranowski.dev.model.Ingredient;
 import pl.baranowski.dev.model.Step;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
@@ -44,39 +42,49 @@ public class RecipeDeserializer extends JsonDeserializer<RecipeDTO> {
         String summary = node.get("summary").asText();
         LOGGER.debug("Parsed summary={}", summary);
 
-        List<Ingredient> ingredients = getIngredients(node.get("extendedIngredients").toString());
+        List<Ingredient> ingredients = getIngredients(node.get("extendedIngredients"));
+        LOGGER.debug("Parsed ingredients={}", ingredients);
 
-        List<Step> instructions = getInstructions(node);
+        List<Step> steps = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
+        LOGGER.debug("Parsed steps={}", steps);
 
-        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredients, instructions);
+        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredients, steps);
         LOGGER.debug("Returning result: {}", result);
         return result;
     }
 
-    private List<Ingredient> getIngredients(String ingredientsJson) throws JsonProcessingException {
+    private List<Ingredient> getIngredients(JsonNode ingredientsNode) throws JsonProcessingException {
+        LOGGER.debug("getIngredients(JsonNode={})", ingredientsNode);
+
+        String ingredientsJsonArray = ingredientsNode.toString();
+        LOGGER.debug("ingredientsArray: {}", ingredientsJsonArray);
+
+        ObjectMapper mapper = createMapper(Ingredient.class, new IngredientDeserializer());
+        List<Ingredient> result = Arrays.asList(mapper.readValue(ingredientsJsonArray, Ingredient[].class));
+
+        LOGGER.debug("Returning result: {}", result);
+        return result;
+    }
+
+    private List<Step> getSteps(JsonNode stepsNode) throws JsonProcessingException {
+        LOGGER.debug("getSteps(JsonNode={})", stepsNode);
+
+        String stepsJsonArray = stepsNode.toString();
+        LOGGER.debug("stepsArray: {}", stepsJsonArray);
+
+        ObjectMapper mapper = createMapper(Step.class, new StepDeserializer());
+        List<Step> result = Arrays.asList(mapper.readValue(stepsJsonArray, Step[].class));
+
+        LOGGER.debug("Returning result: {}", result);
+        return result;
+    }
+
+    private <T> ObjectMapper createMapper(Class<T> clazz, JsonDeserializer<T> deserializer) {
         //TODO pytanie: czy mogę to zrobić przez DI?
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(Ingredient.class, new IngredientDeserializer());
+        module.addDeserializer(clazz, deserializer);
         mapper.registerModule(module);
-
-        List<Ingredient> ingredients = Arrays.asList(mapper.readValue(ingredientsJson, Ingredient[].class));
-        return ingredients;
-    }
-
-    private List<Step> getInstructions(JsonNode node) {
-        List<Step> instructions = new ArrayList<>();
-        Iterator<JsonNode> analyzedInstructions = node.get("analyzedInstructions").elements();
-        if (analyzedInstructions.hasNext()) {
-            JsonNode instruction = analyzedInstructions.next();
-            Iterator<JsonNode> steps = instruction.get("steps").elements();
-            steps.forEachRemaining(step -> {
-                int number = step.get("number").asInt();
-                String description = step.get("step").asText();
-                instructions.add(new Step(number, description));
-            });
-        }
-        LOGGER.debug("Parsed instructions={}", instructions);
-        return instructions;
+        return mapper;
     }
 }
