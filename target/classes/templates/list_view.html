@@ -18,7 +18,7 @@
         <h1>Here is Your result:</h1>
         <div class="button-footer d-flex justify-content-evenly">
             <div>
-                <button type="button" class="btn btn-secondary">Start new search</button>
+                <a th:href="@{~/}"  type="button" class="btn btn-secondary">Start new search</a>
                 <button type="button" class="btn btn-warning">Show bookmarks</button>
             </div>
         </div>
@@ -39,7 +39,7 @@
                     </ul>
                 </div>
                 <div class="card-footer d-flex flex-row justify-content-between">
-                    <a class="btn btn-primary" href="#" >Open</a>
+                    <a class="btn btn-primary" th:href="@{~/recipe/{id}(id=${card.originId})}">Open</a>
                     <a class="btn btn-warning" data-bs-toggle="collapse"
                        th:href="|#missing-ingredients-${card.originId}|" role="button" aria-expanded="false"
                        aria-controls="missing-ingredients">Show/hide missing</a>
