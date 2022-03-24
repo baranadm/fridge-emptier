@@ -13,43 +13,35 @@
 
 <body>
 <div class="container">
-    <div class="row gy-2 py-3 center">
+    <div class="section">
         <h1>Welcome to Fridge Emptier!</h1>
-        <div class="text-block">
-            <hr>
-            This site lets You find recipies, that contain only ingredientDTOS that are available in Your fridge! </br>
-            <br>
-            Please write down all ingredientDTOS that You have.</br>
-            Please separate them with commas.</br>
-            <b>Please use singular form.</b></br>
-            Please do not put pineapple on pizza.
-            <hr>
-        </div>
-        <div class="form-block row gy-3">
-            <form action="#" th:action="@{/find}" th:object="${searchBody}" method="post">
-                <div class="row gy-1">
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent">With ingredientDTOS</span>
-                        <textarea class="form-control" th:field="*{include}" aria-label="With ingredientDTOS"></textarea>
-                    </div>
-                </div>
-                <div class="row gy-1">
-                    <div class="text-block">
-                        If you don't prefer any ingredientDTOS, please write them below.
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-text bg-transparent">Without ingredientDTOS</span>
-                        <textarea class="form-control" th:field="*{exclude}" aria-label="Without ingredientDTOS"></textarea>
-                    </div>
-                </div>
-                <hr>
-                <div class="button-footer d-flex justify-content-evenly">
-                    <p><input class="btn btn-secondary" type="submit" value="Search" /> <input class="btn btn-danger" type="reset" value="Clear fields" /></p>
-                </div>
-            </form>
-        </div>
-
     </div>
+    <hr>
+    <div class="section">
+        <p>This site lets you find dishes made of ingredients from your fridge :)</p>
+    </div>
+    <hr>
+    <form action="#" th:action="@{/find}" th:object="${searchBody}" method="post">
+        <div class="section">
+            <p>Write down ingredients you want to use:</p>
+            <span class="form-example">Please use singular form. Example: banana, egg, oat, milk</span>
+            <textarea class="form-control" th:field="*{include}"></textarea>
+        </div>
+        <hr>
+        <div class="section">
+            <p>If you want to exclude some ingredients, write them down here:</p>
+            <span class="form-example">Example: honey, berry</span>
+            <textarea class="form-control" th:field="*{exclude}"></textarea>
+        </div>
+        <hr>
+        <div class="section d-flex justify-content-evenly">
+            <p>
+                <input class="btn btn-secondary" type="submit" value="Search"/>
+                <input class="btn btn-danger" type="reset" value="Clear fields"/>
+            </p>
+        </div>
+    </form>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
