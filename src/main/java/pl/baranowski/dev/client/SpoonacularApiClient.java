@@ -23,7 +23,7 @@ public class SpoonacularApiClient implements ExternalApiClient {
     private final static boolean SORT_RANDOM = true;
     private final static boolean IGNORE_PANTRY = true;
     private final static boolean FILL_INGREDIENTS = true;
-    private final static int NUMBER_OF_RECIPES = 10;
+    private final static int NUMBER_OF_RECIPES = 9;
 
     @Override
     public String get(long id) throws ExternalApiException {

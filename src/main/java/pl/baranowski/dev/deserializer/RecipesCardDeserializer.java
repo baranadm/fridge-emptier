@@ -23,16 +23,18 @@ public class RecipesCardDeserializer extends JsonDeserializer<RecipeCard> {
     @Override
     public RecipeCard deserialize(JsonParser p,
                                         DeserializationContext ctxt) throws IOException, JacksonException {
-        LOGGER.debug("Starting deserializer");
         ObjectCodec codec = p.getCodec();
-        JsonNode node = ctxt.readTree(p);
+        JsonNode node = codec.readTree(p);
+        LOGGER.debug("Starting RecipeCard deserializer for node: {}", node);
 
         long originId = node.get("id").asLong();
         String title = node.get("title").asText();
         String imageURL = node.get("image").asText();
-        List<IngredientDTO> unusedIngredientDTOS = getIngredients(node.get("unusedIngredients").toString());
+        List<IngredientDTO> unusedIngredientDTOS = getIngredients(node.get("missedIngredients").toString());
 
+        LOGGER.debug("Parsed values: originId={}, title={}, imageURL={}, unusedIngredients={}", originId, title, imageURL, unusedIngredientDTOS);
         RecipeCard result = new RecipeCard(originId, title, imageURL, unusedIngredientDTOS);
+
         return result;
     }
 

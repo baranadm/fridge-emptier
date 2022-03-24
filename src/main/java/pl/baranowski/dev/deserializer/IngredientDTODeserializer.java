@@ -18,19 +18,16 @@ public class IngredientDTODeserializer extends JsonDeserializer<IngredientDTO> {
     @Override
     public IngredientDTO deserialize(JsonParser p,
                                      DeserializationContext ctxt) throws IOException, JacksonException {
-        LOGGER.debug("Starting deserializer");
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
+        LOGGER.debug("Starting Ingredient deserializer for node: {}", node);
 
         String name = node.get("name").asText();
-        LOGGER.debug("Parsed name={}", name);
         Double amount = node.get("amount").asDouble();
-        LOGGER.debug("Parsed amount={}", amount);
         String unit = node.get("unit").asText();
-        LOGGER.debug("Parsed unit={}", unit);
-        IngredientDTO ingredientDTO = new IngredientDTO(name, amount, unit);
+        LOGGER.debug("Parsed values: name={}, amount={}, unit={}", name, amount, unit);
 
-        LOGGER.debug("Returning result: {}", ingredientDTO);
+        IngredientDTO ingredientDTO = new IngredientDTO(name, amount, unit);
         return ingredientDTO;
     }
 }
