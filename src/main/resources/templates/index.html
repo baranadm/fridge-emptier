@@ -24,7 +24,7 @@
     <form action="#" th:action="@{/find}" th:object="${searchBody}" method="post">
         <div class="section">
             <p>Write down ingredients you want to use:</p>
-            <span class="form-example">Please use singular form. Example: banana, egg, oat, milk</span>
+            <span class="form-example">Please use singular form. Example: banana, egg, milk</span>
             <textarea class="form-control" th:field="*{include}"></textarea>
         </div>
         <hr>
