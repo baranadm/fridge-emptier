@@ -49,15 +49,13 @@ public class WebController {
         return "detail_view";
     }
 
-    @GetMapping("/find-test")
-    public String test(Model model) throws ApiException {
-        return findRecipes(new SearchBody("honey, pasta, basil", "tomato"), model);
-    }
-
     @PostMapping("/find")
     public String findRecipes(@ModelAttribute SearchBody searchBody,
                               Model model) throws ApiException {
-        LOGGER.debug("@GET /findRecipes(searchBody={})", searchBody);
+        LOGGER.debug("finRecipes(SB, model) - model contains: {}", model.asMap());
+        model.addAttribute("lastSearchBody", new SearchBody());
+
+        LOGGER.debug("@POST /findRecipes(searchBody={})", searchBody);
 
         List<String> includeList = getList(searchBody.getInclude());
         LOGGER.debug("includeList={}", includeList);

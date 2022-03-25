@@ -31,7 +31,7 @@ public class RecipeDTODeserializer extends JsonDeserializer<RecipeDTO> {
         String originURL = node.get("sourceUrl").asText();
         String imageURL = node.get("image").asText();
         String title = node.get("title").asText();
-        String summary = node.get("summary").asText();
+        String summary = node.get("summary").asText("no description");
         List<IngredientDTO> ingredientDTOS = getIngredients(node.get("extendedIngredients"));
         List<StepDTO> stepDTOS = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
 

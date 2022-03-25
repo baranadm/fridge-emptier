@@ -7,69 +7,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="/css/styles.css" rel="stylesheet">
     <title th:text="|Fridge emptier: ${recipe.title}|"></title>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row gy-2 py-3 center">
-            <h1 th:text="${recipe.title}"></h1>
-            <hr>
-            <div class="recipe-header center">
-                <img class="recipe-image" th:src="@{${recipe.imageURL}}"/>
-            </div>
-            <hr>
-            <div class="button-footer d-flex justify-content-evenly">
-                <div>
-                    <a th:href="@{~/}" type="button" class="btn btn-secondary">Start new search</a>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-danger">Delete from bookmarks</button>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-success">Save to bookmarks</button>
-                </div>
-            </div>
-            <hr>
-            <h5>Origin URL:
-                <a th:href="@{${recipe.originURL}}" th:text="@{${recipe.originURL}}"></a>
-            </h5>
-            <div class="text-block" th:utext="${recipe.summary}">
+<div class="container">
+    <div class="section">
+        <h1 th:text="${recipe.title}"></h1>
+    </div>
+    <hr>
+    <div class="section">
+        <img class="recipe-image img-fluid" th:src="@{${recipe.imageURL}}"/>
+    </div>
+    <hr>
+    <div class="section">
+        <a th:href="@{~/}" type="button" class="btn btn-secondary">Start new search</a>
+        <!--                <div>-->
+        <!--                    <button type="button" class="btn btn-danger">Delete from bookmarks</button>-->
+        <!--                </div>-->
+        <!--                <div>-->
+        <!--                    <button type="button" class="btn btn-success">Save to bookmarks</button>-->
+        <!--                </div>-->
 
-                Farfalle With Broccoli, Carrots and Tomatoes requires about <b>about 45 minutes</b> from start to
-                finish. This recipe serves 8. For <b>96 cents per serving</b>, this recipe <b>covers 15%</b> of your
-                daily requirements of vitamins and minerals. One portion of this dish contains around <b>13g of
-                    protein</b>, <b>8g of fat</b>, and a total of <b>309 calories</b>. 4 people have tried and liked
-                this recipe. This recipe from Foodista requires grape tomatoes, parmigiano-reggiano, carrots, and
-                garlic cloves. It works well as a very budget friendly main course. All things considered, we
-                decided this recipe <b>deserves a spoonacular score of 82%</b>. This score is great. Similar recipes
-                include <a
-                    href="https://spoonacular.com/recipes/farfalle-with-tomatoes-and-feta-cheese-108238">Farfalle
-                    with Tomatoes and Feta Cheese</a>, <a
-                    href="https://spoonacular.com/recipes/farfalle-with-sausage-tomatoes-and-cream-106954">Farfalle
-                    with Sausage, Tomatoes, and Cream</a>, and <a
-                    href="https://spoonacular.com/recipes/farfalle-with-tomatoes-onions-and-spinach-303899">Farfalle
-                    with Tomatoes, Onions, and Spinach</a>.</p>
-            </div>
-            <div class="text-block">
-                <hr>
-                <h3>Ingredients:</h3>
-                <div class="ingredientDTO" th:each="ingredient: ${recipe.ingredients}"><span th:text="|${ingredient.amount} ${ingredient.unit} ${ingredient.name}|"></span></div>
-            </div>
-            <div class="instructions-block">
-                <hr>
-                <h3>Instructions</h3>
-                <div class="recipe-step" th:each="step: ${recipe.steps}">
-                    <span class="recipe-step-number" th:text="${step.number}"></span>
-                    <span class="recipe-step-text" th:text="${step.description}"></span>
-                </div>
-            </div>
+    </div>
+    <hr>
+    <div class="section">
+        <h5>Origin URL:
+            <a th:href="@{${recipe.originURL}}" th:text="@{${recipe.originURL}}"></a>
+        </h5>
+    </div>
+    <hr>
+    <div class="section" th:unless="${recipe.summary} == 'no description'">
+        <span th:utext="${recipe.summary}"></span>
+        <hr>
+    </div>
+    <div class="section">
+        <h3>Ingredients:</h3>
+        <div class="ingredientDTO" th:each="ingredient: ${recipe.ingredients}">
+            <span th:text="|${ingredient.amount} ${ingredient.unit} ${ingredient.name}|"></span>
         </div>
     </div>
+    <hr>
+    <div class="instructions-block">
+        <h3>Instructions</h3>
+        <div class="recipe-step" th:each="step: ${recipe.steps}">
+            <span class="recipe-step-number" th:text="${step.number}"></span>
+            <span class="recipe-step-text" th:text="${step.description}"></span>
+        </div>
+    </div>
+    <hr>
+</div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 </body>
