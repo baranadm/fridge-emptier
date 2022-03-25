@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.baranowski.dev.client.ExternalApiClient;
+import pl.baranowski.dev.client.SpoonacularApiClient;
 import pl.baranowski.dev.dto.RecipeDTO;
-import pl.baranowski.dev.exception.ApiException;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
 import pl.baranowski.dev.model.RecipeCard;
@@ -21,9 +21,9 @@ public class DefaultExternalRecipeApiService implements RecipeService {
     private final ExternalApiClient spoonacularApiClient;
     private final ObjectMapper objectMapper;
 
-    public DefaultExternalRecipeApiService(ExternalApiClient spoonacularApiClient,
-                                           ObjectMapper objectMapper) {
-        this.spoonacularApiClient = spoonacularApiClient;
+    public DefaultExternalRecipeApiService(ObjectMapper objectMapper) {
+        //TODO czy może tak być? muszę podawać url serwisu, żeby testować OkHttp (mocki działają pod innym adresem)
+        this.spoonacularApiClient = new SpoonacularApiClient(SpoonacularApiClient.API_URL);
         this.objectMapper = objectMapper;
     }
 
@@ -42,7 +42,8 @@ public class DefaultExternalRecipeApiService implements RecipeService {
     }
 
     @Override
-    public List<RecipeCard> find(List<String> include, List<String> exclude) throws ExternalApiException, ResourceParsingException {
+    public List<RecipeCard> find(List<String> include,
+                                 List<String> exclude) throws ExternalApiException, ResourceParsingException {
         LOGGER.debug("find(include='{}', exclude='{}')", include, exclude);
 
         String jsonList = spoonacularApiClient.find(include, exclude);

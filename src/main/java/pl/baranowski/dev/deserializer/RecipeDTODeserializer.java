@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baranowski.dev.dto.RecipeDTO;
@@ -27,31 +28,37 @@ public class RecipeDTODeserializer extends JsonDeserializer<RecipeDTO> {
         JsonNode node = oc.readTree(p);
         LOGGER.debug("Starting deserializer for node: {}", node);
 
+        RecipeDTO result = parseFields(node);
+        LOGGER.debug("Returning result: {}", result);
+        return result;
+    }
+
+    @NotNull
+    private RecipeDTO parseFields(JsonNode node) throws JsonProcessingException {
         long originId = node.get("id").asLong();
         String originURL = node.get("sourceUrl").asText();
         String imageURL = node.get("image").asText();
         String title = node.get("title").asText();
         String summary = node.get("summary").asText("no description");
-        List<IngredientDTO> ingredientDTOS = getIngredients(node.get("extendedIngredients"));
-        List<StepDTO> stepDTOS = getSteps(node.get("analyzedInstructions").elements().next().get("steps"));
 
-        RecipeDTO result = new RecipeDTO(originId, originURL, imageURL, title, summary, ingredientDTOS, stepDTOS);
-        LOGGER.debug("Returning result: {}", result);
-        return result;
+        List<IngredientDTO> ingredientDTOS = parseIngredients(node.get("extendedIngredients"));
+        List<StepDTO> stepDTOS = parseSteps(node.get("analyzedInstructions").elements().next().get("steps"));
+
+        return new RecipeDTO(originId, originURL, imageURL, title, summary, ingredientDTOS, stepDTOS);
     }
 
-    private List<IngredientDTO> getIngredients(JsonNode ingredientsNode) throws JsonProcessingException {
+    private List<IngredientDTO> parseIngredients(JsonNode ingredientsNode) throws JsonProcessingException {
         String ingredientsJsonArray = ingredientsNode.toString();
         ObjectMapper mapper = createMapper(IngredientDTO.class, new IngredientDTODeserializer());
-        List<IngredientDTO> result = Arrays.asList(mapper.readValue(ingredientsJsonArray, IngredientDTO[].class));
-        return result;
+        IngredientDTO[] ingredients = mapper.readValue(ingredientsJsonArray, IngredientDTO[].class);
+        return Arrays.asList(ingredients);
     }
 
-    private List<StepDTO> getSteps(JsonNode stepsNode) throws JsonProcessingException {
+    private List<StepDTO> parseSteps(JsonNode stepsNode) throws JsonProcessingException {
         String stepsJsonArray = stepsNode.toString();
         ObjectMapper mapper = createMapper(StepDTO.class, new StepDTODeserializer());
-        List<StepDTO> result = Arrays.asList(mapper.readValue(stepsJsonArray, StepDTO[].class));
-        return result;
+        StepDTO[] steps = mapper.readValue(stepsJsonArray, StepDTO[].class);
+        return Arrays.asList(steps);
     }
 
     private <T> ObjectMapper createMapper(Class<T> clazz, JsonDeserializer<T> deserializer) {
