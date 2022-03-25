@@ -56,6 +56,7 @@ public class SpoonacularApiClient implements ExternalApiClient {
                                                .build();
 
         try (Response response = client.newCall(request).execute()) {
+            //TODO jak to ogarnąć?
             return response.body().string();
         } catch (Exception e) {
             throw new ExternalApiException("Could not receive data from spoonacular API.");
