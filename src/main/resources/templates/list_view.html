@@ -29,6 +29,7 @@
     <hr>
     <div class="section">
         <div class="cards-block d-flex flex-row flex-wrap gap-3 align-left justify-content-center align-items-stretch">
+            <span th:if="${#lists.isEmpty(cards)}"> No recipes found. Try with fewer ingredients.</span>
             <div class="card" th:each="card: ${cards}" style="width: 18rem;">
                 <img th:src="@{${card.imageURL}}" class="card-img-top" alt="...">
                 <div class="card-body">
