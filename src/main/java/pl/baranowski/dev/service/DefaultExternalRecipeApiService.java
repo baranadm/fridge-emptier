@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.baranowski.dev.client.ExternalApiClient;
-import pl.baranowski.dev.client.SpoonacularApiClient;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
@@ -21,9 +20,9 @@ public class DefaultExternalRecipeApiService implements RecipeService {
     private final ExternalApiClient spoonacularApiClient;
     private final ObjectMapper objectMapper;
 
-    public DefaultExternalRecipeApiService(ObjectMapper objectMapper) {
-        //TODO czy może tak być? muszę podawać url serwisu, żeby testować OkHttp (mocki działają pod innym adresem)
-        this.spoonacularApiClient = new SpoonacularApiClient(SpoonacularApiClient.API_URL);
+    public DefaultExternalRecipeApiService(ExternalApiClient spoonacularApiClient,
+                                           ObjectMapper objectMapper) {
+        this.spoonacularApiClient = spoonacularApiClient;
         this.objectMapper = objectMapper;
     }
 

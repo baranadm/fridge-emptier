@@ -30,6 +30,7 @@ class DefaultExternalRecipeApiServiceTest {
     @MockBean
     ExternalApiClient externalApiClient;
 
+
     @Test
     void get_whenExternalApiRespondsWithJSON_returnsRecipe() throws JsonProcessingException, ExternalApiException, ResourceParsingException {
         //given
