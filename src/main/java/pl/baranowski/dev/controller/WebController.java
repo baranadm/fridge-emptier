@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.dto.SearchBody;
 import pl.baranowski.dev.exception.ApiException;
+import pl.baranowski.dev.exception.ExternalApiException;
+import pl.baranowski.dev.exception.ResourceParsingException;
 import pl.baranowski.dev.model.RecipeCard;
 import pl.baranowski.dev.service.RecipeService;
 
@@ -31,13 +33,19 @@ public class WebController {
 
     @GetMapping("/")
     public String showMainPage(Model model) {
-        model.addAttribute("searchBody", new SearchBody());
+        LOGGER.debug("@GET / - showMainPage(model)");
+
+        SearchBody searchBody = new SearchBody();
+        model.addAttribute("searchBody", searchBody);
+        LOGGER.debug("@GET / - showMainPage(model) - searchBody has been added to model: {}", searchBody);
+
+        LOGGER.debug("Returning index.html");
         return "index";
     }
 
     @GetMapping("/recipe/{id}")
-    public String recipe(@PathVariable(name = "id", required = true) @Min(value = 0, message = "Invalid id") long id,
-                         Model model) throws ApiException {
+    public String showRecipeView(@PathVariable(name = "id", required = true) @Min(value = 0, message = "Invalid id") long id,
+                                 Model model) throws ExternalApiException, ResourceParsingException {
         LOGGER.debug("@GET /recipe/{id}: id={}", id);
 
         RecipeDTO result = this.externalApiService.get(id);
@@ -50,17 +58,17 @@ public class WebController {
     }
 
     @PostMapping("/find")
-    public String findRecipes(@ModelAttribute SearchBody searchBody,
-                              Model model) throws ApiException {
+    public String showRecipesSearchResult(@ModelAttribute SearchBody searchBody,
+                                          Model model) throws ExternalApiException, ResourceParsingException {
         LOGGER.debug("finRecipes(SB, model) - model contains: {}", model.asMap());
         model.addAttribute("lastSearchBody", new SearchBody());
 
         LOGGER.debug("@POST /findRecipes(searchBody={})", searchBody);
 
-        List<String> includeList = getList(searchBody.getInclude());
+        List<String> includeList = getListOfIngredients(searchBody.getInclude());
         LOGGER.debug("includeList={}", includeList);
 
-        List<String> excludeList = getList(searchBody.getExclude());
+        List<String> excludeList = getListOfIngredients(searchBody.getExclude());
         LOGGER.debug("excludeList={}", excludeList);
 
         List<RecipeCard> cards = externalApiService.find(includeList, excludeList);
@@ -72,7 +80,7 @@ public class WebController {
     }
 
     @NotNull
-    private List<String> getList(String include) {
+    private List<String> getListOfIngredients(String include) {
         return Arrays.stream(include.split(",")).map(String::trim).collect(Collectors.toList());
     }
 }
