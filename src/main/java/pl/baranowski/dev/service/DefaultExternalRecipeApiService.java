@@ -34,7 +34,7 @@ public class DefaultExternalRecipeApiService implements RecipeService {
         LOGGER.debug("Received json: {}", jsonRecipe);
 
         RecipeDTO result;
-        result = parse(jsonRecipe, RecipeDTO.class);
+        result = processResponse(jsonRecipe, RecipeDTO.class);
 
         LOGGER.debug("Returning result: {}", result);
         return result;
@@ -51,15 +51,20 @@ public class DefaultExternalRecipeApiService implements RecipeService {
         String results = getResults(jsonList);
 
         //TODO pytanie: czy jest to eleganckie rozwiązanie? -> get().toString() , a później readValue z tego
-        RecipeCard[] cards = parse(results, RecipeCard[].class);
+        RecipeCard[] cards = processResponse(results, RecipeCard[].class);
 
         List<RecipeCard> result = Arrays.asList(cards);
         LOGGER.debug("Returning: {}", result);
         return result;
     }
 
+    private <T> T processResponse(String json, Class<T> clazz) throws ResourceParsingException {
+        // is error?
+        return parse(json, clazz);
+    }
+
     private <T> T parse(String json, Class<T> clazz) throws ResourceParsingException {
-        LOGGER.debug("Trying to extract {} from: {}", clazz, json);
+        LOGGER.debug("parse(): Trying to extract {} from: {}", clazz, json);
         T result;
         try {
             result = objectMapper.readValue(json, clazz);

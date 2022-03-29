@@ -50,6 +50,13 @@ textarea {
     margin-top: 12px;
 }
 
+.error-field {
+    font-weight: bold;
+}
+.form-error {
+    color: red;
+}
+
 .form-example {
     font-size: medium;
     font-style: italic;

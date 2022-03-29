@@ -26,6 +26,7 @@
             <p>Write down ingredients you want to use:</p>
             <span class="form-example">Please use singular form. Example: banana, egg, milk</span>
             <textarea class="form-control" th:field="*{include}"></textarea>
+            <span class="form-error" th:if="${#fields.hasErrors('include')}" th:errors="*{include}">Include error</span>
         </div>
         <hr>
         <div class="section">

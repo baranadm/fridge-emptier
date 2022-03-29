@@ -1,26 +1,24 @@
 package pl.baranowski.dev.controller;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.dto.SearchBody;
-import pl.baranowski.dev.exception.ApiException;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
 import pl.baranowski.dev.model.RecipeCard;
 import pl.baranowski.dev.service.RecipeService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class WebController {
@@ -58,17 +56,20 @@ public class WebController {
     }
 
     @PostMapping("/find")
-    public String showRecipesSearchResult(@ModelAttribute SearchBody searchBody,
+    public String showRecipesSearchResult(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
                                           Model model) throws ExternalApiException, ResourceParsingException {
+        if(result.hasErrors()) {
+            return "index";
+        }
         LOGGER.debug("finRecipes(SB, model) - model contains: {}", model.asMap());
         model.addAttribute("lastSearchBody", new SearchBody());
 
         LOGGER.debug("@POST /findRecipes(searchBody={})", searchBody);
 
-        List<String> includeList = getListOfIngredients(searchBody.getInclude());
+        List<String> includeList = searchBody.getIncludeAsList();
         LOGGER.debug("includeList={}", includeList);
 
-        List<String> excludeList = getListOfIngredients(searchBody.getExclude());
+        List<String> excludeList = searchBody.getExcludeAsList();
         LOGGER.debug("excludeList={}", excludeList);
 
         List<RecipeCard> cards = externalApiService.find(includeList, excludeList);
@@ -77,10 +78,5 @@ public class WebController {
         model.addAttribute("cards", cards);
 
         return "list_view";
-    }
-
-    @NotNull
-    private List<String> getListOfIngredients(String include) {
-        return Arrays.stream(include.split(",")).map(String::trim).collect(Collectors.toList());
     }
 }

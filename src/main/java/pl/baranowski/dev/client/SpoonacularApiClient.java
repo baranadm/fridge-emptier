@@ -14,7 +14,8 @@ import java.util.List;
 
 @Component
 public class SpoonacularApiClient implements ExternalApiClient {
-    public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/";
+//    public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/";
+    public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.comaaaaa/"; //incorrect
     private final static String API_HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     private final static String API_KEY = "24ba75ae75msh0b52031a504df72p1e69eejsndc3281a731a9";
     private final static String ENDPOINT_SEARCH_URL = "recipes/complexSearch?";

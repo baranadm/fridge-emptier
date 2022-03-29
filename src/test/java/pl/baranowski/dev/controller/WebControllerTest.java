@@ -1,22 +1,31 @@
 package pl.baranowski.dev.controller;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import pl.baranowski.dev.dto.IngredientDTO;
+import pl.baranowski.dev.dto.RecipeDTO;
+import pl.baranowski.dev.dto.SearchBody;
+import pl.baranowski.dev.dto.StepDTO;
+import pl.baranowski.dev.error.ApiError;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
+import pl.baranowski.dev.model.RecipeCard;
 import pl.baranowski.dev.service.RecipeService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = WebController.class)
@@ -28,7 +37,7 @@ class WebControllerTest {
     RecipeService recipeService;
 
     @Test
-    void showMainPage_addsSearchBodyToModel_returnsStatus200AndIndex() throws Exception {
+    void showMainPage_addsSearchBodyToModel_rendersIndex() throws Exception {
         mockMvc.perform(get("/"))
                .andExpect(status().isOk())
                .andExpect(view().name("index"))
@@ -36,49 +45,105 @@ class WebControllerTest {
     }
 
     @Test
-    void showRecipeView_whenExternalApiException_returns400AndError() throws ExternalApiException, ResourceParsingException {
-        //given
-        MvcResult result = mockMvc.perform(get("recipe/1L")).andExpect(status().isBadRequest()).andExpect(model().attributeHasFieldErrors());
-        //when
+    void showRecipeView_whenExternalApiException_rendersErrorPageWithApiError() throws Exception {
         when(recipeService.get(1L)).thenThrow(ExternalApiException.class);
-        //then
-        assertThrows(ExternalApiException.class, () -> recipeService.get(1L));
+
+        mockMvc.perform(get("/recipe/{id}", 1L))
+               .andExpect(view().name("error"))
+               .andExpect(model().attributeExists("error"))
+               .andExpect(model().attribute("error", Matchers.notNullValue()));
     }
 
     @Test
-    void showRecipeView_whenResourceParsingException_returns400AndError() throws ExternalApiException, ResourceParsingException {
-        //when
+    void showRecipeView_whenResourceParsingException_returns400AndError() throws Exception {
         when(recipeService.get(1L)).thenThrow(ResourceParsingException.class);
-        //then
-        assertThrows(ResourceParsingException.class, () -> recipeService.get(1L));
+
+        mockMvc.perform(get("/recipe/{id}", 1L))
+               .andExpect(view().name("error"))
+               .andExpect(model().attributeExists("error"))
+               .andExpect(model().attribute("error", Matchers.notNullValue()));
     }
 
     @Test
-    void showRecipeView_addsRecipeToModel_returns200AndDetailView() {
-        mockMvc.perform(get("/"))
+    void showRecipeView_addsRecipeToModel_returns200AndDetailView() throws Exception {
+        RecipeDTO spaghetti = new RecipeDTO(123L,
+                                            "http://orogin.url/",
+                                            "http://image.url/",
+                                            "Spaghetti Bolognese",
+                                            "Very tasty spaghetti",
+                                            Arrays.asList(new IngredientDTO("Pasta", 1D, "pack"),
+                                                          new IngredientDTO("Passata", 1D, "can")),
+                                            Arrays.asList(new StepDTO(1, "Fail to find a pot."),
+                                                          new StepDTO(2, "Go to restaurant.")));
+
+        when(recipeService.get(1L)).thenReturn(spaghetti);
+
+        mockMvc.perform(get("/recipe/{id}", 1L))
                .andExpect(status().isOk())
+               .andExpect(view().name("detail_view"))
+               .andExpect(model().attributeExists("recipe"))
+               .andExpect(model().attribute("recipe", Matchers.equalTo(spaghetti)));
+    }
+
+    @Test
+    void showRecipesSearchResult_whenSearchBodyInvalid_rendersIndexWithError() throws Exception {
+        //given
+        SearchBody searchBody = new SearchBody("", "eggs");
+        //when
+        //then
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
                .andExpect(view().name("index"))
-               .andExpect(model().attributeExists("searchBody"));
+               .andExpect(model().attributeHasFieldErrors("searchBody", "include"));
     }
 
     @Test
-    void showRecipesSearchResult_whenEmptyOrInvalidSearchBody_returns400AndError() {
-        fail();
+    void showRecipesSearchResult_whenExternalApiException_rendersErrorPage() throws Exception {
+        //given
+        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        //when
+        when(recipeService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList())).thenThrow(
+                ExternalApiException.class);
+        //then
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+               .andExpect(view().name("error"))
+               .andExpect(model().attributeExists("error"))
+               .andExpect(model().attribute("error", Matchers.notNullValue()));
+
     }
 
     @Test
-    void showRecipesSearchResult_whenExternalApiException_returns400AndError() {
-        fail();
+    void showRecipesSearchResult_whenResourceParsingException_returns400AndError() throws Exception {
+        //given
+        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        //when
+        when(recipeService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList())).thenThrow(
+                ResourceParsingException.class);
+        //then
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+               .andExpect(view().name("error"))
+               .andExpect(model().attributeExists("error"))
+               .andExpect(model().attribute("error", Matchers.notNullValue()));
     }
 
     @Test
-    void showRecipesSearchResult_whenResourceParsingException_returns400AndError() {
-        fail();
-    }
-
-    @Test
-    void showRecipesSearchResult_addsRecipeCardsListToModel_returns200AndListView() {
-        fail();
+    void showRecipesSearchResult_addsRecipeCardsListToModel_returns200AndListView() throws Exception {
+        //given
+        RecipeCard spaghettiCard = new RecipeCard(123L,
+                                                  "Spaghetti Bolognese",
+                                                  "http://image.url/",
+                                                  Arrays.asList(new IngredientDTO("Minced meat", 1D, "lbs"),
+                                                                new IngredientDTO("Onion", 1D, "pc")));
+        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        //when
+        when(recipeService.find(searchBody.getIncludeAsList(),
+                                searchBody.getExcludeAsList())).thenReturn(Collections.singletonList(
+                spaghettiCard));
+        //then
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+               .andExpect(status().isOk())
+               .andExpect(view().name("list_view"))
+               .andExpect(model().attributeExists("cards"))
+               .andExpect(model().attribute("cards", Matchers.equalTo(Collections.singletonList(spaghettiCard))));
     }
 
     //TODO pomyśleć nad rozwiązaniem problemu odswieżania listy wyników
