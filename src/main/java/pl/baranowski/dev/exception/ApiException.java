@@ -14,11 +14,13 @@ public class ApiException extends Exception {
     public ApiException(String message) {
         super(message);
         this.uuid = UUID.randomUUID();
+        LOGGER.error(message);
     }
 
     public ApiException(String message, Throwable cause) {
         super(message, cause);
         this.uuid = UUID.randomUUID();
+        LOGGER.error(uuid.toString(), message);
     }
 
     //    public ApiException(String message) {

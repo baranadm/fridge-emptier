@@ -17,7 +17,6 @@ import java.util.List;
 @Component
 public class SpoonacularApiClient implements ExternalApiClient {
     public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/";
-//    public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.comaaaaa/"; //incorrect
     private final static String API_HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     private final static String API_KEY = "24ba75ae75msh0b52031a504df72p1e69eejsndc3281a731a9";
     private final static String ENDPOINT_SEARCH_URL = "recipes/complexSearch?";
@@ -41,21 +40,21 @@ public class SpoonacularApiClient implements ExternalApiClient {
 
     @Override
     public String get(long id) throws ExternalApiException {
-        LOGGER.debug("get(id={})", id);
+        LOGGER.info("get(id={})", id);
 
         String result = sendRequest(prepareUrl(id));
-        LOGGER.debug("Returning: {}", result);
+        LOGGER.info("Returning: {}", result);
         return result;
     }
 
     @Override
     public String find(List<String> include, List<String> exclude) throws ExternalApiException {
-        LOGGER.debug("find(include={}, exclude={})",
+        LOGGER.info("find(include={}, exclude={})",
                      Arrays.toString(include.toArray()),
                      Arrays.toString(exclude.toArray()));
 
         String result = sendRequest(prepareUrl(include, exclude));
-        LOGGER.debug("Returning: {}", result);
+        LOGGER.info("Returning: {}", result);
         return result;
     }
 
@@ -71,11 +70,8 @@ public class SpoonacularApiClient implements ExternalApiClient {
 
         try (Response response = client.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
-            if (responseBody != null) {
-                return responseBody.string();
-            } else {
-                throw new ExternalApiException("Response from Spoonacular API has no body.");
-            }
+            if (responseBody == null || !response.isSuccessful()) throw new ExternalApiException("Failed receiving data from Spoonacular API.");
+            return responseBody.string();
         } catch (IOException e) {
             throw new ExternalApiException("Could not receive data from Spoonacular API.");
         }
