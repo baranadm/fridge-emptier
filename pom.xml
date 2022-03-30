@@ -73,6 +73,19 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.11</version>
         </dependency>
+        <!-- Inject Resources JUnit extension -->
+        <dependency>
+            <groupId>io.hosuaby</groupId>
+            <artifactId>inject-resources-core</artifactId>
+            <version>0.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.hosuaby</groupId>
+            <artifactId>inject-resources-junit-jupiter</artifactId>
+            <version>0.3.1</version>
+            <scope>test</scope>
+        </dependency>
         <!-- OkHttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
