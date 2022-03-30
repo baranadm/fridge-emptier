@@ -22,7 +22,16 @@
         <div class="button-footer d-flex justify-content-evenly">
             <div>
                 <a th:href="@{~/}" type="button" class="btn btn-secondary">Start new search</a>
-<!--                <a class="btn btn-warning">Find next random</a>-->
+
+
+                <!-- trying to add Refresh button -->
+<!--                <p th:text="${searchBody}"></p>-->
+<!--                <form action="#" th:action="@{~/find/reload}" th:object="${newSearchBody}" method="post">-->
+<!--                    <input type="hidden" th:field="*{include}" th:value="${searchBody.include}">-->
+<!--                    <input class="btn btn-secondary" type="submit" value="Search"/>-->
+<!--                </form>-->
+                <a th:href="@{~/find/reload}" class="btn btn-warning">Find next random</a>
+
             </div>
         </div>
     </div>

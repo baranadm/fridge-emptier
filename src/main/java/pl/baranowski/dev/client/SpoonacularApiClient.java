@@ -3,12 +3,14 @@ package pl.baranowski.dev.client;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.baranowski.dev.exception.ExternalApiException;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,10 +70,14 @@ public class SpoonacularApiClient implements ExternalApiClient {
                                                .build();
 
         try (Response response = client.newCall(request).execute()) {
-            //TODO jak to ogarnąć?
-            return response.body().string();
-        } catch (Exception e) {
-            throw new ExternalApiException("Could not receive data from spoonacular API.");
+            ResponseBody responseBody = response.body();
+            if (responseBody != null) {
+                return responseBody.string();
+            } else {
+                throw new ExternalApiException("Response from Spoonacular API has no body.");
+            }
+        } catch (IOException e) {
+            throw new ExternalApiException("Could not receive data from Spoonacular API.");
         }
     }
 

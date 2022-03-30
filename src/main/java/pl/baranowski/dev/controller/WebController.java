@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.dto.SearchBody;
 import pl.baranowski.dev.exception.ExternalApiException;
@@ -21,6 +18,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @Controller
+@SessionAttributes(value= {"searchBody"})
 public class WebController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebController.class);
     private final RecipeService externalApiService;
@@ -55,9 +53,21 @@ public class WebController {
         return "detail_view";
     }
 
-    @PostMapping("/find")
-    public String showRecipesSearchResult(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
-                                          Model model) throws ExternalApiException, ResourceParsingException {
+    @GetMapping("/find")
+    public String showRecipesSearchResultGet(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
+                                             Model model) throws ExternalApiException, ResourceParsingException {
+        LOGGER.info("showRecipesSearchResultGet, {}", searchBody);
+
+        List<RecipeCard> cards = externalApiService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList());
+        LOGGER.debug("Retrieved cards: {}", cards);
+
+        model.addAttribute("cards", cards);
+        return "list_view";
+    }
+
+        @PostMapping("/find")
+        public String showRecipesSearchResult(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
+                Model model) throws ExternalApiException, ResourceParsingException {
         if(result.hasErrors()) {
             return "index";
         }
@@ -78,5 +88,12 @@ public class WebController {
         model.addAttribute("cards", cards);
 
         return "list_view";
+    }
+
+    @GetMapping("/find/reload")
+    public String reloadSearchResults(@ModelAttribute @Valid SearchBody newSearchBody, Model model) {
+        LOGGER.error(String.valueOf(model.containsAttribute("searchBody")));
+        LOGGER.error(newSearchBody.toString());
+        return "redirect:/find";
     }
 }

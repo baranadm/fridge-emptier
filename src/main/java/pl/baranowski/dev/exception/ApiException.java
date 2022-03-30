@@ -9,16 +9,26 @@ import java.util.UUID;
 @Getter
 public class ApiException extends Exception {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiException.class);
-    private final UUID uuid;
+    private UUID uuid;
 
     public ApiException(String message) {
-        this(message, UUID.randomUUID());
+        super(message);
+        this.uuid = UUID.randomUUID();
     }
 
-    public ApiException(String message, UUID uuid) {
-        super(message);
-        this.uuid = uuid;
-        //TODO nie wyświetla message
-        LOGGER.error(uuid.toString(), message);
+    public ApiException(String message, Throwable cause) {
+        super(message, cause);
+        this.uuid = UUID.randomUUID();
     }
+
+    //    public ApiException(String message) {
+//        this(message, UUID.randomUUID());
+//    }
+//
+//    public ApiException(String message, UUID uuid) {
+//        super(message);
+//        this.uuid = uuid;
+//        //TODO nie wyświetla message <-
+//        LOGGER.error(uuid.toString(), message);
+//    }
 }

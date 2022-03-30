@@ -6,7 +6,7 @@ public class ResourceParsingException extends ApiException {
     public ResourceParsingException(String message) {
         super(message);
     }
-    public ResourceParsingException(String message, UUID uuid) {
-        super(message, uuid);
-    }
+//    public ResourceParsingException(String message, UUID uuid) {
+//        super(message, uuid);
+//    }
 }
