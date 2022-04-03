@@ -1,31 +1,19 @@
 # fridge-emptier
 
-Opinie, przemyslenia:
-- moze lepiej nie oprozniacz-lodowki, tylko na-co-mam-ochote? w zalozeniu lodowka ogranicza skladniki.  
-heroku: https://fridge-emptier.herokuapp.com/
+##Site URL
+Heroku: https://fridge-emptier.herokuapp.com/
 
-Service lets user write down ingredientDTOS from it's fridge, and ingredientDTOS that user does not like. The service then searches for recipies that contains every ingredientDTO from user's fridge, and does not contain unliked ingredientDTOS. User can view ingredientDTOS, summary and instructions of recipe. Recipe has origin URL, image URL, summary, ingredientDTOS, instructions. User can save recipies to favourites, delete and list-view them.
+##Description
+Service lets user write down ingredients available in his kitchen. User also is allowed to provide ingredients, that he does not like. The service then searches for recipes containing ingredients provided by user, and not containing disliked ingredients. User can view ingredients, summary and instructions of recipe. Recipe has origin URL, image URL, summary, ingredients, instructions.
 
-When user adds a recipe to favourites, it then is saved to database as an entity.
+Service is retrieving data from external API: https://spoonacular.com/food-api  
+Requests are processed through Rapid API: https://rapidapi.com/
 
-----
-# nouns:
-User
-Ingredient -
-Recipe -
-Summary -
-Origin URL
-Image URL
-Instruction -
-Favourites
-Database
-List view
-Details view
-
-# verbs:
-search
-view list
-view detail
-save
-delete
-add
+##Technologies/frameworks used in project:
+- HTML (Bootstrap) + CSS + Thymeleaf
+- SpringBoot
+- JUnit Jupiter
+- OkHttp (+ MockWebServer for tests purposes)
+- ModelMapper (with Property Mappings and Converters)
+- Jackson (ObjectMapper)
+- Lombok
