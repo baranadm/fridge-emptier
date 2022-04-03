@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "likes"
 })
 @Generated("jsonschema2pojo")
-public class SearhResult {
+public class SearhResultEntry {
 
     @JsonProperty("id")
     private Integer id;

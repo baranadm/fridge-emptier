@@ -18,4 +18,5 @@ public class RecipeCardDTO {
     private String title;
     private String imageURL;
     private List<IngredientDTO> ingredientsToBuy;
+    //TODO add used ingredients
 }

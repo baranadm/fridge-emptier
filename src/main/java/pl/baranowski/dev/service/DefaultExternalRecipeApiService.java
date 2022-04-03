@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import pl.baranowski.dev.api.external.spoonacular.AnalyzedInstruction;
 import pl.baranowski.dev.api.external.spoonacular.SpoonacularResponse;
 import pl.baranowski.dev.api.external.spoonacular.Step;
+import pl.baranowski.dev.api.external.spoonacular.search.result.SearhResultEntry;
 import pl.baranowski.dev.client.ExternalApiClient;
 import pl.baranowski.dev.dto.RecipeCardDTO;
 import pl.baranowski.dev.dto.RecipeDTO;
@@ -57,6 +58,11 @@ public class DefaultExternalRecipeApiService implements RecipeService {
                                                                                            .collect(
                                                                                                    Collectors.toList());
             modelMapper.using(stepsConverter).map(SpoonacularResponse::getAnalyzedInstructions, RecipeEntity::setSteps);
+        });
+        this.modelMapper.typeMap(SearhResultEntry.class, RecipeCardDTO.class).addMappings(modelMapper -> {
+            modelMapper.map(SearhResultEntry::getId, RecipeCardDTO::setOriginId);
+            modelMapper.map(SearhResultEntry::getImage, RecipeCardDTO::setImageURL);
+            modelMapper.map(SearhResultEntry::getMissedIngredients, RecipeCardDTO::setIngredientsToBuy);
         });
     }
 
