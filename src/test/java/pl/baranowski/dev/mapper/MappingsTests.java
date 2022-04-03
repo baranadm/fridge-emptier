@@ -8,14 +8,11 @@ import pl.baranowski.dev.api.external.spoonacular.AnalyzedInstruction;
 import pl.baranowski.dev.api.external.spoonacular.ExtendedIngredient;
 import pl.baranowski.dev.api.external.spoonacular.SpoonacularResponse;
 import pl.baranowski.dev.api.external.spoonacular.Step;
-import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.entity.IngredientEntity;
 import pl.baranowski.dev.entity.RecipeEntity;
 import pl.baranowski.dev.entity.StepEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,7 +86,7 @@ public class MappingsTests {
         spoonacularResponse.setTitle("Cabbage snack");
         spoonacularResponse.setSummary("Enormously big plate of cabbage.");
         spoonacularResponse.setExtendedIngredients(spoonacularIngredients);
-        spoonacularResponse.setAnalyzedInstructions(Arrays.asList(spoonacularInstruction));
+        spoonacularResponse.setAnalyzedInstructions(Collections.singletonList(spoonacularInstruction));
 
         RecipeEntity expected = new RecipeEntity(null,
                                                  spoonacularResponse.getId().longValue(),
