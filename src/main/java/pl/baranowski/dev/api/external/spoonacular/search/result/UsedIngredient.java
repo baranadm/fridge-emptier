@@ -48,7 +48,7 @@ public class UsedIngredient {
     @JsonProperty("originalName")
     private String originalName;
     @JsonProperty("meta")
-    private List<Object> meta = null;
+    private List<String> meta = null;
     @JsonProperty("image")
     private String image;
     @JsonIgnore
@@ -145,12 +145,12 @@ public class UsedIngredient {
     }
 
     @JsonProperty("meta")
-    public List<Object> getMeta() {
+    public List<String> getMeta() {
         return meta;
     }
 
     @JsonProperty("meta")
-    public void setMeta(List<Object> meta) {
+    public void setMeta(List<String> meta) {
         this.meta = meta;
     }
 

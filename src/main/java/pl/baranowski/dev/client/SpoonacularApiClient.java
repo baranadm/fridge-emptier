@@ -1,5 +1,7 @@
 package pl.baranowski.dev.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -8,14 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.baranowski.dev.api.external.spoonacular.Recipe;
+import pl.baranowski.dev.api.external.spoonacular.search.result.Result;
+import pl.baranowski.dev.api.external.spoonacular.search.result.SearchResults;
 import pl.baranowski.dev.exception.ExternalApiException;
+import pl.baranowski.dev.exception.ResourceParsingException;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class SpoonacularApiClient implements ExternalApiClient {
+public class SpoonacularApiClient {
     public final static String API_URL = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/";
     private final static String API_HOST = "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com";
     private final static String API_KEY = "24ba75ae75msh0b52031a504df72p1e69eejsndc3281a731a9";
@@ -28,33 +34,65 @@ public class SpoonacularApiClient implements ExternalApiClient {
     private final static int NUMBER_OF_RECIPES = 9;
     private final Logger LOGGER = LoggerFactory.getLogger(SpoonacularApiClient.class);
     private final String apiUrl;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public SpoonacularApiClient() {
-        this(API_URL);
+    public SpoonacularApiClient(ObjectMapper objectMapper) {
+        this(API_URL, objectMapper);
     }
 
-    public SpoonacularApiClient(String apiUrl) {
+    public SpoonacularApiClient(String apiUrl, ObjectMapper objectMapper) {
         this.apiUrl = apiUrl;
+        this.objectMapper = objectMapper;
     }
 
-    @Override
-    public String get(long id) throws ExternalApiException {
+    public Recipe get(long id) throws ExternalApiException, ResourceParsingException {
         LOGGER.info("get(id={})", id);
 
-        String result = sendRequest(prepareUrl(id));
-        LOGGER.info("Returning: {}", result);
+        String response = sendRequest(prepareUrl(id));
+        LOGGER.info("Received response: {}", response);
+
+        Recipe result = parseRecipeResponse(response);
+        LOGGER.info("Returning mapped result");
         return result;
     }
 
-    @Override
-    public String find(List<String> include, List<String> exclude) throws ExternalApiException {
+    public List<Result> find(List<String> include,
+                             List<String> exclude) throws ExternalApiException, ResourceParsingException {
         LOGGER.info("find(include={}, exclude={})",
-                     Arrays.toString(include.toArray()),
-                     Arrays.toString(exclude.toArray()));
+                    Arrays.toString(include.toArray()),
+                    Arrays.toString(exclude.toArray()));
 
-        String result = sendRequest(prepareUrl(include, exclude));
-        LOGGER.info("Returning: {}", result);
+        String response = sendRequest(prepareUrl(include, exclude));
+        LOGGER.info("Received response: {}", response);
+
+        SearchResults searchResults = parseSearchResultResponse(response);
+
+        LOGGER.info("Returning mapped result.");
+        return searchResults.getResults();
+    }
+
+    private Recipe parseRecipeResponse(String response) throws ResourceParsingException {
+        Recipe result;
+        try {
+            result = objectMapper.readValue(response, Recipe.class);
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(response);
+            throw new ResourceParsingException("Error parsing response from Spoonacular API.");
+        }
+        return result;
+    }
+
+    private SearchResults parseSearchResultResponse(String response) throws ResourceParsingException {
+        SearchResults result;
+        try {
+            result = objectMapper.readValue(response, SearchResults.class);
+        } catch (JsonProcessingException e) {
+            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(response);
+            throw new ResourceParsingException("Error parsing response from Spoonacular API.");
+        }
         return result;
     }
 
@@ -70,7 +108,8 @@ public class SpoonacularApiClient implements ExternalApiClient {
 
         try (Response response = client.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
-            if (responseBody == null || !response.isSuccessful()) throw new ExternalApiException("Failed receiving data from Spoonacular API.");
+            if (responseBody == null || !response.isSuccessful())
+                throw new ExternalApiException("Failed receiving data from Spoonacular API.");
             return responseBody.string();
         } catch (IOException e) {
             throw new ExternalApiException("Could not receive data from Spoonacular API.");

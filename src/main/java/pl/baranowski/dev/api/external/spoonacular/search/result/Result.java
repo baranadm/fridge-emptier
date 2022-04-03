@@ -15,27 +15,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
-    "title",
-    "image",
-    "imageType",
     "usedIngredientCount",
     "missedIngredientCount",
     "missedIngredients",
     "usedIngredients",
     "unusedIngredients",
-    "likes"
+    "likes",
+    "title",
+    "image",
+    "imageType"
 })
 @Generated("jsonschema2pojo")
-public class SearhResultEntry {
+public class Result {
 
     @JsonProperty("id")
     private Integer id;
-    @JsonProperty("title")
-    private String title;
-    @JsonProperty("image")
-    private String image;
-    @JsonProperty("imageType")
-    private String imageType;
     @JsonProperty("usedIngredientCount")
     private Integer usedIngredientCount;
     @JsonProperty("missedIngredientCount")
@@ -48,6 +42,12 @@ public class SearhResultEntry {
     private List<Object> unusedIngredients = null;
     @JsonProperty("likes")
     private Integer likes;
+    @JsonProperty("title")
+    private String title;
+    @JsonProperty("image")
+    private String image;
+    @JsonProperty("imageType")
+    private String imageType;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -59,36 +59,6 @@ public class SearhResultEntry {
     @JsonProperty("id")
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    @JsonProperty("title")
-    public String getTitle() {
-        return title;
-    }
-
-    @JsonProperty("title")
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @JsonProperty("image")
-    public String getImage() {
-        return image;
-    }
-
-    @JsonProperty("image")
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    @JsonProperty("imageType")
-    public String getImageType() {
-        return imageType;
-    }
-
-    @JsonProperty("imageType")
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
     }
 
     @JsonProperty("usedIngredientCount")
@@ -149,6 +119,36 @@ public class SearhResultEntry {
     @JsonProperty("likes")
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    @JsonProperty("title")
+    public String getTitle() {
+        return title;
+    }
+
+    @JsonProperty("title")
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @JsonProperty("image")
+    public String getImage() {
+        return image;
+    }
+
+    @JsonProperty("image")
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @JsonProperty("imageType")
+    public String getImageType() {
+        return imageType;
+    }
+
+    @JsonProperty("imageType")
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 
     @JsonAnyGetter

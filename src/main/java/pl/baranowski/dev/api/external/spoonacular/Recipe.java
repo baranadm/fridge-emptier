@@ -52,7 +52,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "spoonacularSourceUrl"
 })
 @Generated("jsonschema2pojo")
-public class SpoonacularResponse {
+public class Recipe {
 
     @JsonProperty("vegetarian")
     private Boolean vegetarian;

@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.baranowski.dev.api.external.spoonacular.AnalyzedInstruction;
 import pl.baranowski.dev.api.external.spoonacular.ExtendedIngredient;
-import pl.baranowski.dev.api.external.spoonacular.SpoonacularResponse;
+import pl.baranowski.dev.api.external.spoonacular.Recipe;
 import pl.baranowski.dev.api.external.spoonacular.Step;
 import pl.baranowski.dev.api.external.spoonacular.search.result.MissedIngredient;
-import pl.baranowski.dev.api.external.spoonacular.search.result.SearhResultEntry;
+import pl.baranowski.dev.api.external.spoonacular.search.result.Result;
 import pl.baranowski.dev.dto.IngredientDTO;
 import pl.baranowski.dev.dto.RecipeCardDTO;
 import pl.baranowski.dev.dto.RecipeDTO;
@@ -69,7 +69,7 @@ public class SpoonacularApiMappingsTests {
     }
 
     @Test
-    void spoonacularResponse_to_responseEntity() {
+    void recipe_to_recipeEntity() {
         //given
         ExtendedIngredient spoonacularIngredient = new ExtendedIngredient();
         spoonacularIngredient.setName("Cabbage");
@@ -85,21 +85,21 @@ public class SpoonacularApiMappingsTests {
         AnalyzedInstruction spoonacularInstruction = new AnalyzedInstruction();
         spoonacularInstruction.setSteps(Collections.singletonList(spoonacularStep));
 
-        SpoonacularResponse spoonacularResponse = new SpoonacularResponse();
-        spoonacularResponse.setId(1234);
-        spoonacularResponse.setSourceUrl("source.url");
-        spoonacularResponse.setImage("image.url");
-        spoonacularResponse.setTitle("Cabbage snack");
-        spoonacularResponse.setSummary("Enormously big plate of cabbage.");
-        spoonacularResponse.setExtendedIngredients(spoonacularIngredients);
-        spoonacularResponse.setAnalyzedInstructions(Collections.singletonList(spoonacularInstruction));
+        Recipe recipe = new Recipe();
+        recipe.setId(1234);
+        recipe.setSourceUrl("source.url");
+        recipe.setImage("image.url");
+        recipe.setTitle("Cabbage snack");
+        recipe.setSummary("Enormously big plate of cabbage.");
+        recipe.setExtendedIngredients(spoonacularIngredients);
+        recipe.setAnalyzedInstructions(Collections.singletonList(spoonacularInstruction));
 
         RecipeEntity expected = new RecipeEntity(null,
-                                                 spoonacularResponse.getId().longValue(),
-                                                 spoonacularResponse.getSourceUrl(),
-                                                 spoonacularResponse.getImage(),
-                                                 spoonacularResponse.getTitle(),
-                                                 spoonacularResponse.getSummary(),
+                                                 recipe.getId().longValue(),
+                                                 recipe.getSourceUrl(),
+                                                 recipe.getImage(),
+                                                 recipe.getTitle(),
+                                                 recipe.getSummary(),
                                                  Collections.nCopies(2,
                                                                      new IngredientEntity(0,
                                                                                           spoonacularIngredient.getName(),
@@ -109,10 +109,51 @@ public class SpoonacularApiMappingsTests {
                                                                                           spoonacularStep.getNumber(),
                                                                                           spoonacularStep.getStep())));
         //when
-        RecipeEntity result = underTest.map(spoonacularResponse, RecipeEntity.class);
+        RecipeEntity result = underTest.map(recipe, RecipeEntity.class);
 
         //then
         assertEquals(expected, result);
+    }
+
+    @Test
+    void recipe_to_recipeDTO() {
+        //given
+        ExtendedIngredient onion = new ExtendedIngredient();
+        onion.setName("Onion");
+        onion.setAmount(4.0);
+        onion.setUnit("quarters");
+
+        Step step = new Step();
+        step.setNumber(1);
+        step.setStep("Eat every quarter");
+
+        AnalyzedInstruction instructions = new AnalyzedInstruction();
+        instructions.setSteps(List.of(step));
+
+        Recipe recipe = new Recipe();
+        recipe.setId(34);
+        recipe.setTitle("Tasty 30min recipe");
+        recipe.setSummary("30 minut recipe (+2h of washing dishes)");
+        recipe.setImage("filtered.image.url");
+        recipe.setSourceUrl("source.url");
+        recipe.setExtendedIngredients(List.of(onion));
+        recipe.setAnalyzedInstructions(List.of(instructions));
+
+        //when
+        RecipeDTO result = underTest.map(recipe, RecipeDTO.class);
+
+        //then
+        RecipeDTO expected = new RecipeDTO(34L,
+                                           recipe.getSourceUrl(),
+                                           recipe.getImage(),
+                                           recipe.getTitle(),
+                                           recipe.getSummary(),
+                                           List.of(new IngredientDTO("Onion", 4.0, "quarters")),
+                                           List.of(new StepDTO(
+                                                   step.getNumber(), step.getStep())));
+
+        assertEquals(expected, result);
+
     }
 
     @Test
@@ -127,12 +168,12 @@ public class SpoonacularApiMappingsTests {
     }
 
     @Test
-    void spoonacularSearchResultEntry_to_RecipeCardDTO() {
+    void spoonacularResult_to_RecipeCardDTO() {
         //given
-        SearhResultEntry searchResultEntry = new SearhResultEntry();
-        searchResultEntry.setId(45);
-        searchResultEntry.setTitle("Pretty spicy chicken with french fries");
-        searchResultEntry.setImage("image.url");
+        Result spoonacularResult = new Result();
+        spoonacularResult.setId(45);
+        spoonacularResult.setTitle("Pretty spicy chicken with french fries");
+        spoonacularResult.setImage("image.url");
         MissedIngredient chicken = new MissedIngredient();
         chicken.setName("Chicken");
         chicken.setAmount(2.0);
@@ -141,9 +182,9 @@ public class SpoonacularApiMappingsTests {
         chilli.setName("Chilli");
         chilli.setAmount(10.0);
         chilli.setUnit("tbsp");
-        searchResultEntry.setMissedIngredients(Arrays.asList(chicken, chilli));
+        spoonacularResult.setMissedIngredients(Arrays.asList(chicken, chilli));
 
-        RecipeCardDTO expected = new RecipeCardDTO(45L, searchResultEntry.getTitle(), searchResultEntry.getImage(),
+        RecipeCardDTO expected = new RecipeCardDTO(45L, spoonacularResult.getTitle(), spoonacularResult.getImage(),
                                                    Arrays.asList(new IngredientDTO(chicken.getName(),
                                                                                    chicken.getAmount(),
                                                                                    chicken.getUnit()),
@@ -151,7 +192,7 @@ public class SpoonacularApiMappingsTests {
                                                                                    chilli.getAmount(),
                                                                                    chilli.getUnit())));
         //when
-        RecipeCardDTO result = underTest.map(searchResultEntry, RecipeCardDTO.class);
+        RecipeCardDTO result = underTest.map(spoonacularResult, RecipeCardDTO.class);
 
         //then
         assertEquals(expected, result);

@@ -24,7 +24,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "original",
     "originalName",
     "meta",
-    "image"
+    "image",
+    "extendedName"
 })
 @Generated("jsonschema2pojo")
 public class MissedIngredient {
@@ -51,6 +52,8 @@ public class MissedIngredient {
     private List<String> meta = null;
     @JsonProperty("image")
     private String image;
+    @JsonProperty("extendedName")
+    private String extendedName;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -162,6 +165,16 @@ public class MissedIngredient {
     @JsonProperty("image")
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @JsonProperty("extendedName")
+    public String getExtendedName() {
+        return extendedName;
+    }
+
+    @JsonProperty("extendedName")
+    public void setExtendedName(String extendedName) {
+        this.extendedName = extendedName;
     }
 
     @JsonAnyGetter
