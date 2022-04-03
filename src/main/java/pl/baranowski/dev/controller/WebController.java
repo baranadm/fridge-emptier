@@ -7,10 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.baranowski.dev.dto.RecipeDTO;
-import pl.baranowski.dev.dto.SearchBody;
+import pl.baranowski.dev.dto.SearchBodyDTO;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
-import pl.baranowski.dev.model.RecipeCard;
+import pl.baranowski.dev.dto.RecipeCardDTO;
 import pl.baranowski.dev.service.RecipeService;
 
 import javax.validation.Valid;
@@ -31,9 +31,9 @@ public class WebController {
     public String showMainPage(Model model) {
         LOGGER.debug("@GET / - showMainPage(model)");
 
-        SearchBody searchBody = new SearchBody();
-        model.addAttribute("searchBody", searchBody);
-        LOGGER.debug("@GET / - showMainPage(model) - searchBody has been added to model: {}", searchBody);
+        SearchBodyDTO searchBodyDTO = new SearchBodyDTO();
+        model.addAttribute("searchBody", searchBodyDTO);
+        LOGGER.debug("@GET / - showMainPage(model) - searchBody has been added to model: {}", searchBodyDTO);
 
         LOGGER.debug("Returning index.html");
         return "index";
@@ -54,11 +54,11 @@ public class WebController {
     }
 
     @GetMapping("/find")
-    public String showRecipesSearchResultGet(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
+    public String showRecipesSearchResultGet(@ModelAttribute @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
                                              Model model) throws ExternalApiException, ResourceParsingException {
-        LOGGER.info("showRecipesSearchResultGet, {}", searchBody);
+        LOGGER.info("showRecipesSearchResultGet, {}", searchBodyDTO);
 
-        List<RecipeCard> cards = externalApiService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList());
+        List<RecipeCardDTO> cards = externalApiService.find(searchBodyDTO.getIncludeAsList(), searchBodyDTO.getExcludeAsList());
         LOGGER.debug("Retrieved cards: {}", cards);
 
         model.addAttribute("cards", cards);
@@ -66,23 +66,23 @@ public class WebController {
     }
 
         @PostMapping("/find")
-        public String showRecipesSearchResult(@ModelAttribute @Valid SearchBody searchBody, BindingResult result,
-                Model model) throws ExternalApiException, ResourceParsingException {
+        public String showRecipesSearchResult(@ModelAttribute @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
+                                              Model model) throws ExternalApiException, ResourceParsingException {
         if(result.hasErrors()) {
             return "index";
         }
         LOGGER.debug("finRecipes(SB, model) - model contains: {}", model.asMap());
-        model.addAttribute("lastSearchBody", new SearchBody());
+        model.addAttribute("lastSearchBody", new SearchBodyDTO());
 
-        LOGGER.debug("@POST /findRecipes(searchBody={})", searchBody);
+        LOGGER.debug("@POST /findRecipes(searchBody={})", searchBodyDTO);
 
-        List<String> includeList = searchBody.getIncludeAsList();
+        List<String> includeList = searchBodyDTO.getIncludeAsList();
         LOGGER.debug("includeList={}", includeList);
 
-        List<String> excludeList = searchBody.getExcludeAsList();
+        List<String> excludeList = searchBodyDTO.getExcludeAsList();
         LOGGER.debug("excludeList={}", excludeList);
 
-        List<RecipeCard> cards = externalApiService.find(includeList, excludeList);
+        List<RecipeCardDTO> cards = externalApiService.find(includeList, excludeList);
         LOGGER.debug("Retrieved cards: {}", cards);
 
         model.addAttribute("cards", cards);
@@ -91,9 +91,9 @@ public class WebController {
     }
 
     @GetMapping("/find/reload")
-    public String reloadSearchResults(@ModelAttribute @Valid SearchBody newSearchBody, Model model) {
+    public String reloadSearchResults(@ModelAttribute @Valid SearchBodyDTO newSearchBodyDTO, Model model) {
         LOGGER.error(String.valueOf(model.containsAttribute("searchBody")));
-        LOGGER.error(newSearchBody.toString());
+        LOGGER.error(newSearchBodyDTO.toString());
         return "redirect:/find";
     }
 }

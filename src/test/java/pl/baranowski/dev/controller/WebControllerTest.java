@@ -8,21 +8,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.dto.RecipeDTO;
-import pl.baranowski.dev.dto.SearchBody;
-import pl.baranowski.dev.dto.StepDTO;
-import pl.baranowski.dev.error.ApiError;
+import pl.baranowski.dev.dto.*;
+import pl.baranowski.dev.dto.SearchBodyDTO;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
-import pl.baranowski.dev.model.RecipeCard;
 import pl.baranowski.dev.service.RecipeService;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -88,10 +83,10 @@ class WebControllerTest {
     @Test
     void showRecipesSearchResult_whenSearchBodyInvalid_rendersIndexWithError() throws Exception {
         //given
-        SearchBody searchBody = new SearchBody("", "eggs");
+        SearchBodyDTO searchBodyDTO = new SearchBodyDTO("", "eggs");
         //when
         //then
-        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBodyDTO))
                .andExpect(view().name("index"))
                .andExpect(model().attributeHasFieldErrors("searchBody", "include"));
     }
@@ -99,12 +94,12 @@ class WebControllerTest {
     @Test
     void showRecipesSearchResult_whenExternalApiException_rendersErrorPage() throws Exception {
         //given
-        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        SearchBodyDTO searchBodyDTO = new SearchBodyDTO("pasta, passata", "eggs");
         //when
-        when(recipeService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList())).thenThrow(
+        when(recipeService.find(searchBodyDTO.getIncludeAsList(), searchBodyDTO.getExcludeAsList())).thenThrow(
                 ExternalApiException.class);
         //then
-        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBodyDTO))
                .andExpect(view().name("error"))
                .andExpect(model().attributeExists("error"))
                .andExpect(model().attribute("error", Matchers.notNullValue()));
@@ -114,12 +109,12 @@ class WebControllerTest {
     @Test
     void showRecipesSearchResult_whenResourceParsingException_returns400AndError() throws Exception {
         //given
-        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        SearchBodyDTO searchBodyDTO = new SearchBodyDTO("pasta, passata", "eggs");
         //when
-        when(recipeService.find(searchBody.getIncludeAsList(), searchBody.getExcludeAsList())).thenThrow(
+        when(recipeService.find(searchBodyDTO.getIncludeAsList(), searchBodyDTO.getExcludeAsList())).thenThrow(
                 ResourceParsingException.class);
         //then
-        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBodyDTO))
                .andExpect(view().name("error"))
                .andExpect(model().attributeExists("error"))
                .andExpect(model().attribute("error", Matchers.notNullValue()));
@@ -128,18 +123,18 @@ class WebControllerTest {
     @Test
     void showRecipesSearchResult_addsRecipeCardsListToModel_returns200AndListView() throws Exception {
         //given
-        RecipeCard spaghettiCard = new RecipeCard(123L,
-                                                  "Spaghetti Bolognese",
-                                                  "http://image.url/",
-                                                  Arrays.asList(new IngredientDTO("Minced meat", 1D, "lbs"),
+        RecipeCardDTO spaghettiCard = new RecipeCardDTO(123L,
+                                                        "Spaghetti Bolognese",
+                                                        "http://image.url/",
+                                                        Arrays.asList(new IngredientDTO("Minced meat", 1D, "lbs"),
                                                                 new IngredientDTO("Onion", 1D, "pc")));
-        SearchBody searchBody = new SearchBody("pasta, passata", "eggs");
+        SearchBodyDTO searchBodyDTO = new SearchBodyDTO("pasta, passata", "eggs");
         //when
-        when(recipeService.find(searchBody.getIncludeAsList(),
-                                searchBody.getExcludeAsList())).thenReturn(Collections.singletonList(
+        when(recipeService.find(searchBodyDTO.getIncludeAsList(),
+                                searchBodyDTO.getExcludeAsList())).thenReturn(Collections.singletonList(
                 spaghettiCard));
         //then
-        mockMvc.perform(post("/find").flashAttr("searchBody", searchBody))
+        mockMvc.perform(post("/find").flashAttr("searchBody", searchBodyDTO))
                .andExpect(status().isOk())
                .andExpect(view().name("list_view"))
                .andExpect(model().attributeExists("cards"))

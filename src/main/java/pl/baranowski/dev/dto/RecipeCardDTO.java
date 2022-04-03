@@ -1,4 +1,4 @@
-package pl.baranowski.dev.model;
+package pl.baranowski.dev.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonDeserialize(using = RecipesCardDeserializer.class)
-public class RecipeCard {
+public class RecipeCardDTO {
     private long originId;
     private String title;
     private String imageURL;

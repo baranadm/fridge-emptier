@@ -21,7 +21,7 @@
         <p>This site lets you find dishes made of ingredients from your fridge :)</p>
     </div>
     <hr>
-    <form action="#" th:action="@{/find}" th:object="${searchBody}" method="post">
+    <form action="#" th:action="@{/find}" th:object="${searchBodyDTO}" method="post">
         <div class="section">
             <p>Write down ingredients you want to use:</p>
             <span class="form-example">Please use singular form. Example: banana, egg, milk</span>

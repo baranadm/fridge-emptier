@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchBody {
+public class SearchBodyDTO {
     @NotBlank(message = "Please provide at least one ingredient.")
     private String include;
     private String exclude;

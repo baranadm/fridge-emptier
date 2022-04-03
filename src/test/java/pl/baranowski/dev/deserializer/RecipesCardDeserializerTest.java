@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.model.RecipeCard;
+import pl.baranowski.dev.dto.RecipeCardDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -120,14 +120,14 @@ class RecipesCardDeserializerTest {
                 "            \"imageType\": \"jpg\"\n" +
                 "        }";
         //when
-        RecipeCard result = underTest.readValue(json, RecipeCard.class);
+        RecipeCardDTO result = underTest.readValue(json, RecipeCardDTO.class);
         //then
         List<IngredientDTO> expectedUnusedIngredientDTOS = Arrays.asList(new IngredientDTO("almond milk", 1.5D, "cup"),
                                                                          new IngredientDTO("baby spinach", 2.0D, "cups"),
                                                                          new IngredientDTO("honey", 1.0D, "tablespoon"),
                                                                          new IngredientDTO("mango", 1.0, "cup"));
-        RecipeCard expected = new RecipeCard(645479L, "Green Monster Ice Pops", "https://spoonacular.com/recipeImages/645479-312x231.jpg",
-                                             expectedUnusedIngredientDTOS);
+        RecipeCardDTO expected = new RecipeCardDTO(645479L, "Green Monster Ice Pops", "https://spoonacular.com/recipeImages/645479-312x231.jpg",
+                                                   expectedUnusedIngredientDTOS);
         assertEquals(expected, result);
 
     }

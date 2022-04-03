@@ -3,6 +3,7 @@ package pl.baranowski.dev.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +12,7 @@ import pl.baranowski.dev.dto.RecipeDTO;
 import pl.baranowski.dev.exception.ApiException;
 import pl.baranowski.dev.exception.ExternalApiException;
 import pl.baranowski.dev.exception.ResourceParsingException;
-import pl.baranowski.dev.model.RecipeCard;
+import pl.baranowski.dev.dto.RecipeCardDTO;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {DefaultExternalRecipeApiService.class, ObjectMapper.class})
+@SpringBootTest(classes = {DefaultExternalRecipeApiService.class, ObjectMapper.class, ModelMapper.class})
 class DefaultExternalRecipeApiServiceTest {
     @Autowired
     DefaultExternalRecipeApiService underTest;
@@ -70,12 +71,12 @@ class DefaultExternalRecipeApiServiceTest {
         List<String> exclude = Arrays.asList("onion", "strawberry");
         when(externalApiClient.find(include, exclude)).thenReturn(listJSON);
         //when
-        List<RecipeCard> result = underTest.find(include, exclude);
+        List<RecipeCardDTO> result = underTest.find(include, exclude);
         //then
         //TODO pytanie: czy jest to eleganckie rozwiązanie? -> get().toString() , a później readValue z tego
         String results = objectMapper.readTree(listJSON).get("results").toString();
-        RecipeCard[] cards = objectMapper.readValue(results, RecipeCard[].class);
-        List<RecipeCard> expected = Arrays.asList(cards);
+        RecipeCardDTO[] cards = objectMapper.readValue(results, RecipeCardDTO[].class);
+        List<RecipeCardDTO> expected = Arrays.asList(cards);
         assertEquals(expected, result);
     }
 

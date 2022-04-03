@@ -12,17 +12,17 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baranowski.dev.dto.IngredientDTO;
-import pl.baranowski.dev.model.RecipeCard;
+import pl.baranowski.dev.dto.RecipeCardDTO;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class RecipesCardDeserializer extends JsonDeserializer<RecipeCard> {
+public class RecipesCardDeserializer extends JsonDeserializer<RecipeCardDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecipesCardDeserializer.class);
     @Override
-    public RecipeCard deserialize(JsonParser p,
-                                        DeserializationContext ctxt) throws IOException, JacksonException {
+    public RecipeCardDTO deserialize(JsonParser p,
+                                     DeserializationContext ctxt) throws IOException, JacksonException {
         ObjectCodec codec = p.getCodec();
         JsonNode node = codec.readTree(p);
         LOGGER.debug("Starting RecipeCard deserializer for node: {}", node);
@@ -33,7 +33,7 @@ public class RecipesCardDeserializer extends JsonDeserializer<RecipeCard> {
         List<IngredientDTO> unusedIngredientDTOS = getIngredients(node.get("missedIngredients").toString());
 
         LOGGER.debug("Parsed values: originId={}, title={}, imageURL={}, unusedIngredients={}", originId, title, imageURL, unusedIngredientDTOS);
-        RecipeCard result = new RecipeCard(originId, title, imageURL, unusedIngredientDTOS);
+        RecipeCardDTO result = new RecipeCardDTO(originId, title, imageURL, unusedIngredientDTOS);
 
         return result;
     }
