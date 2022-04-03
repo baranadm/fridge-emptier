@@ -82,26 +82,26 @@ public class DefaultExternalRecipeApiService implements RecipeService {
 
     @Override
     public RecipeDTO get(long id) throws ExternalApiException, ResourceParsingException {
-        LOGGER.debug("get(id='{}')", id);
+        LOGGER.info("get(id='{}')", id);
 
         Recipe recipe = spoonacularApiClient.get(id);
-        LOGGER.debug("Received recipe: {}", recipe);
+        LOGGER.info("Received recipe: {}", recipe);
 
         RecipeDTO result = modelMapper.map(recipe, RecipeDTO.class);
-        LOGGER.debug("Returning result: {}", result);
+        LOGGER.info("Returning result: {}", result);
         return result;
     }
 
     @Override
     public List<RecipeCardDTO> find(List<String> include,
                                     List<String> exclude) throws ExternalApiException, ResourceParsingException {
-        LOGGER.debug("find(include='{}', exclude='{}')", include, exclude);
+        LOGGER.info("find(include='{}', exclude='{}')", include, exclude);
 
         List<Result> searchResult = spoonacularApiClient.find(include, exclude);
-        LOGGER.debug("Received search result: {}", searchResult);
+        LOGGER.info("Received search result: {}", searchResult);
 
         List<RecipeCardDTO> result = Arrays.asList(modelMapper.map(searchResult, RecipeCardDTO[].class));
-        LOGGER.debug("Returning list of RecipeCards: {}", result);
+        LOGGER.info("Returning list of RecipeCards: {}", result);
         return result;
     }
 

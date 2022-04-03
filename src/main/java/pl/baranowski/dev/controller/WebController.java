@@ -29,61 +29,61 @@ public class WebController {
 
     @GetMapping("/")
     public String showMainPage(Model model) {
-        LOGGER.debug("@GET / - showMainPage(model)");
+        LOGGER.info("@GET / - showMainPage(model)");
 
         SearchBodyDTO searchBodyDTO = new SearchBodyDTO();
         model.addAttribute("searchBody", searchBodyDTO);
-        LOGGER.debug("@GET / - showMainPage(model) - searchBody has been added to model: {}", searchBodyDTO);
+        LOGGER.info("@GET / - showMainPage(model) - searchBody has been added to model: {}", searchBodyDTO);
 
-        LOGGER.debug("Returning index.html");
+        LOGGER.info("Returning index.html");
         return "index";
     }
 
     @GetMapping("/recipe/{id}")
     public String showRecipeView(@PathVariable(name = "id", required = true) @Min(value = 0, message = "Invalid id") long id,
                                  Model model) throws ExternalApiException, ResourceParsingException {
-        LOGGER.debug("@GET /recipe/{id}: id={}", id);
+        LOGGER.info("@GET /recipe/{id}: id={}", id);
 
         RecipeDTO result = this.externalApiService.get(id);
-        LOGGER.debug("Result: {}", result);
+        LOGGER.info("Result: {}", result);
 
         model.addAttribute("recipe", result);
 
-        LOGGER.debug("Done, returning detail_view");
+        LOGGER.info("Done, returning detail_view");
         return "detail_view";
     }
 
     @GetMapping("/find")
-    public String showRecipesSearchResultGet(@ModelAttribute @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
+    public String showRecipesSearchResultGet(@ModelAttribute(name = "searchBody") @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
                                              Model model) throws ExternalApiException, ResourceParsingException {
         LOGGER.info("showRecipesSearchResultGet, {}", searchBodyDTO);
 
         List<RecipeCardDTO> cards = externalApiService.find(searchBodyDTO.getIncludeAsList(), searchBodyDTO.getExcludeAsList());
-        LOGGER.debug("Retrieved cards: {}", cards);
+        LOGGER.info("Retrieved cards: {}", cards);
 
         model.addAttribute("cards", cards);
         return "list_view";
     }
 
         @PostMapping("/find")
-        public String showRecipesSearchResult(@ModelAttribute @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
+        public String showRecipesSearchResult(@ModelAttribute(name = "searchBody") @Valid SearchBodyDTO searchBodyDTO, BindingResult result,
                                               Model model) throws ExternalApiException, ResourceParsingException {
         if(result.hasErrors()) {
             return "index";
         }
-        LOGGER.debug("finRecipes(SB, model) - model contains: {}", model.asMap());
+        LOGGER.info("finRecipes(SB, model) - model contains: {}", model.asMap());
         model.addAttribute("lastSearchBody", new SearchBodyDTO());
 
-        LOGGER.debug("@POST /findRecipes(searchBody={})", searchBodyDTO);
+        LOGGER.info("@POST /findRecipes(searchBody={})", searchBodyDTO);
 
         List<String> includeList = searchBodyDTO.getIncludeAsList();
-        LOGGER.debug("includeList={}", includeList);
+        LOGGER.info("includeList={}", includeList);
 
         List<String> excludeList = searchBodyDTO.getExcludeAsList();
-        LOGGER.debug("excludeList={}", excludeList);
+        LOGGER.info("excludeList={}", excludeList);
 
         List<RecipeCardDTO> cards = externalApiService.find(includeList, excludeList);
-        LOGGER.debug("Retrieved cards: {}", cards);
+        LOGGER.info("Retrieved cards: {}", cards);
 
         model.addAttribute("cards", cards);
 
@@ -91,9 +91,9 @@ public class WebController {
     }
 
     @GetMapping("/find/reload")
-    public String reloadSearchResults(@ModelAttribute @Valid SearchBodyDTO newSearchBodyDTO, Model model) {
-        LOGGER.error(String.valueOf(model.containsAttribute("searchBody")));
-        LOGGER.error(newSearchBodyDTO.toString());
+    public String reloadSearchResults(@ModelAttribute(name = "searchBody")  @Valid SearchBodyDTO newSearchBodyDTO, Model model) {
+        LOGGER.info(String.valueOf(model.containsAttribute("searchBody")));
+        LOGGER.info(newSearchBodyDTO.toString());
         return "redirect:/find";
     }
 }

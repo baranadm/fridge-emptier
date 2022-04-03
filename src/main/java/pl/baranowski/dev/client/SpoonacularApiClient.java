@@ -97,7 +97,7 @@ public class SpoonacularApiClient {
     }
 
     private String sendRequest(String url) throws ExternalApiException {
-        LOGGER.debug("sendRequest(url={})", url);
+        LOGGER.info("sendRequest(url={})", url);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url)

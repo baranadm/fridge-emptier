@@ -141,9 +141,4 @@ class WebControllerTest {
                .andExpect(model().attribute("cards", Matchers.equalTo(Collections.singletonList(spaghettiCard))));
     }
 
-    //TODO pomyśleć nad rozwiązaniem problemu odswieżania listy wyników
-    @Test
-    void showRecipesSearchResult_addLastSearchBodyToModel() {
-        fail();
-    }
 }
